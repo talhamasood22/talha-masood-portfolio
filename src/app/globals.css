@@ -615,7 +615,11 @@ button,
     transition: opacity 200ms ease;
   }
 
+  /* The column is narrow at 1024px, so names wrap rather than truncate. */
   .exp__rail-company {
+    overflow: visible;
+    white-space: normal;
+    text-wrap: balance;
     font-size: 1.0625rem;
   }
 
