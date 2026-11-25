@@ -203,6 +203,13 @@ function GraphCanvas({ caption }: { caption: string }) {
         </button>
       </div>
 
+      {/* Above the canvas, so you know what to do before you look at it. */}
+      <p className="rg-hint" aria-live="polite">
+        {mode === "before"
+          ? "Every run is its own node, so the busy object fans out into a wall of tasks. Zoomed to fit, nothing is readable."
+          : "Use + on SharedObject to add a task group, and ‹ › to step through a group's runs. Drag nodes to move them, or the background to pan."}
+      </p>
+
       <GraphActionsContext.Provider value={actions}>
         <div
           className="rg-canvas"
@@ -238,12 +245,6 @@ function GraphCanvas({ caption }: { caption: string }) {
           </ReactFlow>
         </div>
       </GraphActionsContext.Provider>
-
-      <p className="rg-hint">
-        {mode === "before"
-          ? "Every run is its own node, so the busy object fans out into a wall of tasks. Zoomed to fit, nothing is readable."
-          : "Use + on SharedObject to add a task group, and ‹ › to step through a group's runs. Drag nodes to move them, or the background to pan."}
-      </p>
     </>
   );
 }

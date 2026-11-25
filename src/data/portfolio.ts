@@ -64,6 +64,8 @@ export interface ExperienceItem {
   employmentType: string;
   /** The role told as a short story, first person, one paragraph per entry. */
   story: string[];
+  /** An optional pointer to something on the page you can try. */
+  link?: { href: string; label: string };
   /** A handful of tags, not an inventory. The CV has the full list. */
   techStack: string[];
 }
@@ -113,6 +115,7 @@ export interface SkillCategory {
 export const NAV_ITEMS: NavItem[] = [
   { label: "About", href: "#about", id: "about" },
   { label: "Experience", href: "#experience", id: "experience" },
+  { label: "Graph", href: "#graph", id: "graph" },
   { label: "Projects", href: "#projects", id: "projects" },
   { label: "Contact", href: "#contact", id: "contact" },
 ];
@@ -207,9 +210,10 @@ export const experiences: ExperienceItem[] = [
     employmentType: "Working student",
     story: [
       "Proxima's scientists run a lot of computations, and I build the internal tools they use to keep track of them.",
-      "The piece I'm proudest of is the task-run graph. Lineages had grown so dense they stopped being useful, so I designed an aggregation that groups runs by the object they act on, their direction and their task type, without merging lineages that are genuinely independent. One test graph went from 1,388 nodes to 52.",
+      "The piece I'm proudest of is the task-run graph. Lineages had grown so dense they stopped being useful, so I designed an aggregation that groups runs by the object they act on, their direction and their task type, without merging lineages that are genuinely independent.",
       "I also made every pull request deploy its own staging-like environment in about five minutes, so scientists can try a change before it merges, and built the explorer they use to find the failed, slow or uncommitted runs.",
     ],
+    link: { href: "#graph", label: "Try the rebuilt graph" },
     techStack: ["TypeScript", "React Flow", "FastAPI", "Terraform", "Cloud Run"],
   },
   {

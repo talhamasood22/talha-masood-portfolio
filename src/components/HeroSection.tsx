@@ -1,5 +1,5 @@
 import React from "react";
-import { Download } from "lucide-react";
+import { ArrowDown, Download } from "lucide-react";
 import { ProfileAvatar } from "@/components/ProfileAvatar";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { personalInfo } from "@/data/portfolio";
@@ -44,8 +44,15 @@ export function HeroSection() {
             <p className="max-w-[52ch] text-lede text-ink text-pretty">
               {personalInfo.headline}
             </p>
+            <a
+              href="#graph"
+              className="focus-ring mt-3 inline-flex min-h-[44px] items-center gap-1.5 rounded-chip text-small font-medium text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:decoration-accent"
+            >
+              Try the graph I redesigned
+              <ArrowDown className="h-3.5 w-3.5" aria-hidden="true" />
+            </a>
 
-            <div className="mt-9 flex flex-wrap items-center gap-3">
+            <div className="mt-6 flex flex-wrap items-center gap-3">
               <ButtonLink href="#contact" variant="primary" size="lg">
                 Get in touch
               </ButtonLink>
