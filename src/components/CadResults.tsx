@@ -276,9 +276,11 @@ export function CadResults() {
           Simple parts work; complex ones, like a chair, are still out of reach.
         </p>
         <p className="text-small leading-relaxed text-muted text-pretty">
-          <span className="font-medium text-ink">Weak spot:</span> the check step compared
-          sizes, not shapes, so it never judged a medium or hard part correctly. Next fix:
-          compare the geometry itself.
+          <span className="font-medium text-ink">Weak spot:</span> the check step is
+          meant to catch a bad part and send it back for a fix. But it only checked the
+          part&apos;s bounding box, position and volume, never its actual shape, so it
+          could pass a part with the right overall size and the wrong form. On medium and
+          hard parts, its pass/fail verdict was wrong every time, for all three models.
         </p>
       </div>
 
