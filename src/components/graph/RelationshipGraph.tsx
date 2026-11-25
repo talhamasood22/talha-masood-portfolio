@@ -30,6 +30,9 @@ import { cn } from "@/lib/utils";
 
 const nodeTypes: NodeTypes = { object: ObjectNode, task: TaskNode };
 
+/** Breathing room between the graph and the canvas edge when it is framed. */
+const FIT_PADDING = "48px";
+
 type Mode = "before" | "after";
 
 const noopSubscribe = () => () => {};
@@ -65,6 +68,9 @@ function GraphCanvas({ caption }: { caption: string }) {
   const [expanded, setExpanded] = useState<string[]>(["a"]);
   const [runIndex, setRunIndex] = useState<Record<string, number>>({});
   const [menuOpen, setMenuOpen] = useState(false);
+  // Bumped by Reset: forces a fresh layout (undoing any dragged nodes) and a
+  // re-frame, in either view.
+  const [resetCount, setResetCount] = useState(0);
   const { fitView } = useReactFlow();
 
   const graph = useMemo(() => {
@@ -97,7 +103,9 @@ function GraphCanvas({ caption }: { caption: string }) {
         })
       ),
     };
-  }, [mode, expanded, runIndex]);
+    // resetCount only forces a fresh layout object; it does not change it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode, expanded, runIndex, resetCount]);
 
   // The laid-out nodes seed React Flow's own node state, so visitors can drag
   // nodes around; any change to the graph lays it out afresh.
@@ -108,7 +116,7 @@ function GraphCanvas({ caption }: { caption: string }) {
 
   // Frame the graph whenever its shape changes (not when a run is cycled,
   // so the view does not jump while you step through runs).
-  const shapeKey = `${mode}:${expanded.join(",")}`;
+  const shapeKey = `${mode}:${expanded.join(",")}:${resetCount}`;
   // On a phone, fitting the whole grouped graph makes it unreadably small,
   // so it opens at a legible zoom around the centre and you pan for the
   // rest. "Before" always fits everything: the wall of nodes is the point.
@@ -116,7 +124,7 @@ function GraphCanvas({ caption }: { caption: string }) {
     const id = window.setTimeout(() => {
       const narrow = window.matchMedia("(max-width: 639px)").matches;
       fitView({
-        padding: 0.12,
+        padding: FIT_PADDING,
         duration: 450,
         maxZoom: 1,
         minZoom: narrow && mode === "after" ? 0.62 : undefined,
@@ -150,10 +158,13 @@ function GraphCanvas({ caption }: { caption: string }) {
     [mode, expanded, menuOpen]
   );
 
+  // Back to the starting state: in After, only TaskRun A on its first run;
+  // in both views, a fresh layout and a re-frame.
   const reset = useCallback(() => {
     setExpanded(["a"]);
     setRunIndex({});
     setMenuOpen(false);
+    setResetCount((n) => n + 1);
   }, []);
 
   return (
@@ -187,11 +198,9 @@ function GraphCanvas({ caption }: { caption: string }) {
           </div>
         </dl>
 
-        {mode === "after" && (
-          <button type="button" onClick={reset} className="rg-reset focus-ring">
-            Reset
-          </button>
-        )}
+        <button type="button" onClick={reset} className="rg-reset focus-ring">
+          Reset
+        </button>
       </div>
 
       <GraphActionsContext.Provider value={actions}>
@@ -219,7 +228,7 @@ function GraphCanvas({ caption }: { caption: string }) {
             minZoom={0.08}
             maxZoom={1.6}
             fitView
-            fitViewOptions={{ padding: 0.12, maxZoom: 1 }}
+            fitViewOptions={{ padding: FIT_PADDING, maxZoom: 1 }}
             proOptions={{ hideAttribution: true }}
           >
             <Panel position="top-left" className="rg-caption">
