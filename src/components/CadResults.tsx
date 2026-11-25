@@ -64,23 +64,92 @@ function bestModels(metric: Metric, row: Record<ModelId, Score>): ModelId[] {
   return MODELS.filter((m) => row[m.id].value === target).map((m) => m.id);
 }
 
-function Stat({ value, label, detail }: { value: string; label: string; detail: string }) {
+/** Mean of one metric across the five parts, for one model. */
+function meanOf(metricId: string, model: ModelId) {
+  const metric = METRICS.find((m) => m.id === metricId)!;
+  return TASKS.reduce((sum, t) => sum + metric.data[t.id][model].value, 0) / TASKS.length;
+}
+
+/** Feedback verdicts pooled by difficulty: correct / total over all models. */
+function verdictsWhere(test: (level: string) => boolean) {
+  const metric = METRICS.find((m) => m.id === "feedback")!;
+  let correct = 0;
+  let total = 0;
+  for (const t of TASKS) {
+    if (!test(t.level)) continue;
+    for (const m of MODELS) {
+      correct += metric.data[t.id][m.id].count?.correct ?? 0;
+      total += metric.data[t.id][m.id].count?.total ?? 0;
+    }
+  }
+  return { correct, total };
+}
+
+interface MiniBar {
+  key: string;
+  label: string;
+  value: number;
+  shown: string;
+  color: string;
+  model?: ModelId;
+}
+
+/** A headline number with a tiny bar comparison under it, on a 0–scaleMax scale. */
+function Stat({
+  value,
+  label,
+  bars,
+  note,
+  scaleMax = 1,
+}: {
+  value: string;
+  label: string;
+  bars: MiniBar[];
+  note: string;
+  scaleMax?: number;
+}) {
+  const max = scaleMax;
   return (
-    <div className="border-t border-hairline pt-4">
+    <div className="flex flex-col border-t border-hairline pt-4">
       <p className="font-heading text-[clamp(1.75rem,1.4rem+1.2vw,2.25rem)] leading-none text-ink tabular-nums">
         {value}
       </p>
       <p className="mt-2 text-small font-medium text-ink">
         <Names text={label} />
       </p>
-      <p className="mt-1 text-small text-muted">
-        <Names text={detail} />
-      </p>
+      <ul className="mt-4 space-y-2.5">
+        {bars.map((b) => (
+          <li key={b.key}>
+            <span className="flex items-center gap-1.5 text-[0.8125rem] leading-tight text-muted">
+              {b.model && <Marker model={b.model} />}
+              <span className="whitespace-nowrap">{b.label}</span>
+            </span>
+            <div className="mt-1 flex items-center gap-2">
+              <div className="h-2 flex-1 rounded-r-[4px] bg-hairline/60">
+                <div
+                  className="h-full rounded-r-[4px]"
+                  style={{
+                    width: b.value === 0 ? "2px" : `${(b.value / max) * 100}%`,
+                    backgroundColor: b.color,
+                  }}
+                />
+              </div>
+              <span className="w-12 shrink-0 text-right text-[0.8125rem] leading-none text-ink tabular-nums">
+                {b.shown}
+              </span>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-3 text-[0.8125rem] text-faint">{note}</p>
     </div>
   );
 }
 
-function DotPlot({ metric }: { metric: Metric }) {
+const BAR = 12; // px, per model
+const GAP = 2; // px surface gap between a part's bars
+
+function BarChart({ metric }: { metric: Metric }) {
   return (
     <div className="mt-6" aria-hidden="true">
       {TASKS.map((task) => {
@@ -89,67 +158,57 @@ function DotPlot({ metric }: { metric: Metric }) {
         return (
           <div
             key={task.id}
-            className="grid grid-cols-1 gap-1 border-t border-hairline py-3 sm:grid-cols-[9.5rem_1fr] sm:items-center sm:gap-4"
+            className="grid grid-cols-1 gap-2 border-t border-hairline py-3.5 sm:grid-cols-[9.5rem_1fr] sm:items-center sm:gap-4"
           >
             <p className="text-small leading-tight">
               <span className="font-medium text-ink">{task.name}</span>
               <span className="meta ml-2 sm:ml-0 sm:block">{task.level}</span>
             </p>
 
-            <div className="relative h-14">
+            <div className="relative">
               {TICKS.map((t) => (
                 <span
                   key={t}
-                  className="absolute inset-y-0 w-px bg-hairline"
+                  className="absolute -inset-y-1.5 w-px bg-hairline"
                   style={{ left: `${t * 100}%` }}
                 />
               ))}
-              {MODELS.map((model, lane) => {
-                const score = row[model.id];
-                // Label the best score once per row; a row where everyone scored 0 gets none.
-                const isBest = best[0] === model.id && !(metric.better === "higher" && score.value === 0);
-                const nearEnd = score.value > 0.8;
-                return (
-                  <div
-                    key={model.id}
-                    className="absolute inset-x-0 h-0"
-                    style={{ top: `${20 + lane * 30}%` }}
-                  >
-                    {/* stem from zero, so the length reads as magnitude */}
-                    <span
-                      className="absolute top-0 h-0.5 -translate-y-1/2 rounded-full opacity-35"
-                      style={{
-                        width: `${score.value * 100}%`,
-                        backgroundColor: SERIES[model.id].color,
-                      }}
-                    />
-                    <span
-                      className="group absolute top-0 flex h-6 w-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center"
-                      style={{ left: `${score.value * 100}%` }}
-                    >
-                      <Marker
-                        model={model.id}
-                        className="shadow-[0_0_0_2px_var(--panel)] transition-transform group-hover:scale-125"
+              <div className="relative flex flex-col" style={{ gap: GAP }}>
+                {MODELS.map((model) => {
+                  const score = row[model.id];
+                  // Label the best bar once per row; a row where everyone scored 0 gets none.
+                  const labelled =
+                    best[0] === model.id && !(metric.better === "higher" && score.value === 0);
+                  const inside = score.value > 0.82;
+                  return (
+                    <div key={model.id} className="group relative" style={{ height: BAR }}>
+                      <div
+                        className="absolute inset-y-0 left-0 rounded-r-[4px] transition-[filter] group-hover:brightness-110"
+                        style={{
+                          width: score.value === 0 ? "2px" : `${score.value * 100}%`,
+                          backgroundColor: SERIES[model.id].color,
+                        }}
                       />
-                      <span className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 hidden -translate-x-1/2 whitespace-nowrap rounded-md border border-hairline bg-panel-raised px-2 py-1 text-[0.75rem] text-ink shadow-sm group-hover:block">
+                      {labelled && (
+                        <span
+                          className={cn(
+                            "absolute top-1/2 -translate-y-1/2 whitespace-nowrap text-[0.75rem] font-semibold leading-none tabular-nums",
+                            inside ? "-translate-x-full pr-1.5 text-[#0a1015]" : "pl-1.5 text-ink"
+                          )}
+                          style={{ left: `${Math.max(score.value, 0) * 100}%` }}
+                        >
+                          {fmt(score, metric.decimals)}
+                          {best.length > 1 && <span className="font-normal opacity-75"> tie</span>}
+                        </span>
+                      )}
+                      {/* hover target spans the whole lane, bigger than the bar */}
+                      <span className="pointer-events-none absolute bottom-full left-0 z-10 mb-1 hidden whitespace-nowrap rounded-md border border-hairline bg-panel-raised px-2 py-1 text-[0.75rem] text-ink shadow-sm group-hover:block">
                         {model.name}, {task.name}: {fmt(score, metric.decimals)}
                       </span>
-                    </span>
-                    {isBest && (
-                      <span
-                        className={cn(
-                          "absolute top-0 -translate-y-1/2 whitespace-nowrap text-[0.75rem] font-medium leading-none text-ink tabular-nums",
-                          nearEnd ? "-translate-x-full pr-3.5" : "pl-3.5"
-                        )}
-                        style={{ left: `${score.value * 100}%` }}
-                      >
-                        {fmt(score, metric.decimals)}
-                        {best.length > 1 && <span className="text-faint"> tie</span>}
-                      </span>
-                    )}
-                  </div>
-                );
-              })}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         );
@@ -242,22 +301,41 @@ export function CadResults() {
         </p>
       </div>
 
-      <div className="mt-6 grid gap-6 sm:grid-cols-3">
+      <div className="mt-6 grid gap-8 md:grid-cols-3 md:gap-6">
         <Stat
           value="5 of 5"
-          label="parts where Qwen2.5-Coder-7B-Instruct understood the prompt best"
-          detail="It extracted 0.67–0.90 of the requirements. Llama-3.1-8B-Instruct and Gemma-2-9B-it never got above 0.47."
+          label="parts where Qwen2.5-Coder-7B-Instruct extracted the most requirements"
+          bars={MODELS.map((m) => {
+            const v = meanOf("requirements", m.id);
+            return { key: m.id, model: m.id, label: m.name, value: v, shown: v.toFixed(2), color: SERIES[m.id].color };
+          })}
+          note="Mean share of requirements extracted across the five parts. Higher is better."
         />
         <Stat
-          value="0.046"
+          value={meanOf("pointcloud", "qwen").toFixed(3)}
           label="Qwen2.5-Coder-7B-Instruct's average shape error"
-          detail="Against 0.130 for Gemma-2-9B-it and 0.310 for Llama-3.1-8B-Instruct (normalized point-cloud distance, lower is better)."
+          bars={MODELS.map((m) => {
+            const v = meanOf("pointcloud", m.id);
+            return { key: m.id, model: m.id, label: m.name, value: v, shown: v.toFixed(3), color: SERIES[m.id].color };
+          })}
+          note="Mean normalized point-cloud distance across the five parts, scaled to the largest. Lower is better."
+          scaleMax={Math.max(...MODELS.map((m) => meanOf("pointcloud", m.id)))}
         />
-        <Stat
-          value="0 of 36"
-          label="correct feedback verdicts on medium and hard parts"
-          detail="Across all three models. The feedback loop is the part that needs work next."
-        />
+        {(() => {
+          const easy = verdictsWhere((l) => l === "Simple");
+          const hard = verdictsWhere((l) => l !== "Simple");
+          return (
+            <Stat
+              value={`${hard.correct} of ${hard.total}`}
+              label="correct feedback verdicts on medium and hard parts"
+              bars={[
+                { key: "simple", label: "Simple parts", value: easy.correct / easy.total, shown: `${easy.correct}/${easy.total}`, color: "var(--accent)" },
+                { key: "harder", label: "Medium and hard parts", value: hard.correct / hard.total, shown: `${hard.correct}/${hard.total}`, color: "var(--accent)" },
+              ]}
+              note="All three models pooled. The feedback loop is the part that needs work next."
+            />
+          );
+        })()}
       </div>
 
       <div className="mt-10 space-y-3" role="group" aria-label="Choose a metric">
@@ -303,7 +381,7 @@ export function CadResults() {
           </ul>
         </div>
 
-        <DotPlot metric={metric} />
+        <BarChart metric={metric} />
 
         <p className="mt-5 max-w-[70ch] text-base text-ink text-pretty">
           <Names text={metric.finding} />
