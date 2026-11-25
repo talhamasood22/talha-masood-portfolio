@@ -12,11 +12,13 @@ import {
 } from "@/data/cad-results";
 
 /* Identity is carried by shape as well as colour, so the chart still reads
-   for colour-blind visitors and in print. */
+   for colour-blind visitors and in print. The theme tokens live in
+   globals.css; the fallbacks (the dark-theme steps) keep the bars drawn even
+   if a stylesheet without them is served. */
 const SERIES: Record<ModelId, { color: string; shape: string }> = {
-  qwen: { color: "var(--series-1)", shape: "rounded-full" },
-  llama: { color: "var(--series-2)", shape: "rounded-[2px]" },
-  gemma: { color: "var(--series-3)", shape: "rotate-45 rounded-[2px] scale-[0.85]" },
+  qwen: { color: "var(--series-1, #3987e5)", shape: "rounded-full" },
+  llama: { color: "var(--series-2, #d95926)", shape: "rounded-[2px]" },
+  gemma: { color: "var(--series-3, #199e70)", shape: "rotate-45 rounded-[2px] scale-[0.85]" },
 };
 
 const AGENTS: Metric["agent"][] = ["Reasoning", "Generation", "Feedback"];
