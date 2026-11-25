@@ -1,0 +1,76 @@
+# ==============================================================================
+# cloudbuild.yaml
+# Automated CI/CD Pipeline for Google Cloud Build
+#
+# Steps:
+# 1. Build multi-stage Dockerfile with standalone Next.js server
+# 2. Push image tags to Google Artifact Registry
+# 3. Deploy container service to Google Cloud Run
+# ==============================================================================
+
+steps:
+  # ----------------------------------------------------------------------------
+  # Step 1: Build the container image using multi-stage Dockerfile
+  # ----------------------------------------------------------------------------
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'docker-build'
+    args:
+      - 'build'
+      - '--build-arg=NEXT_PUBLIC_SITE_URL=${_SITE_URL}'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE_NAME}:${_IMAGE_TAG}'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE_NAME}:latest'
+      - '.'
+
+  # ----------------------------------------------------------------------------
+  # Step 2: Push container image tags to Google Artifact Registry
+  # ----------------------------------------------------------------------------
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'docker-push'
+    args:
+      - 'push'
+      - '--all-tags'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE_NAME}'
+
+  # ----------------------------------------------------------------------------
+  # Step 3: Deploy container to Google Cloud Run
+  # ----------------------------------------------------------------------------
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'cloud-run-deploy'
+    entrypoint: 'gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - '${_SERVICE_NAME}'
+      - '--image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE_NAME}:${_IMAGE_TAG}'
+      - '--region=${_REGION}'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--port=8080'
+      - '--memory=512Mi'
+      - '--cpu=1'
+      - '--min-instances=0'
+      - '--max-instances=5'
+      - '--concurrency=80'
+
+# Artifact Registry images tracked by Cloud Build
+images:
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE_NAME}:${_IMAGE_TAG}'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE_NAME}:latest'
+
+# Default parameter substitutions (overridable in Cloud Build triggers or CLI)
+substitutions:
+  _SERVICE_NAME: 'talha-masood-portfolio'
+  _REGION: 'europe-west3'
+  _REPOSITORY: 'talha-portfolio-repo'
+  # Canonical origin baked into metadata, Open Graph tags and sitemap.xml.
+  # Set it to the Cloud Run service URL or your custom domain.
+  _SITE_URL: 'https://REPLACE-WITH-YOUR-DOMAIN'
+  # Triggered builds tag with the commit; manual submits pass _IMAGE_TAG.
+  _IMAGE_TAG: '${COMMIT_SHA}'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  # Lets _IMAGE_TAG default to $COMMIT_SHA.
+  dynamicSubstitutions: true

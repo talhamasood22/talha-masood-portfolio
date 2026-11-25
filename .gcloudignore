@@ -1,0 +1,13 @@
+# Files `gcloud builds submit` skips. Without this file gcloud would reuse
+# .gitignore and drop .env.local, the resume and the profile photo, which the
+# deployed site needs. .dockerignore then trims the Docker build context.
+.git
+.gitignore
+node_modules/
+.next/
+.snapshots/
+.freebuff/
+.cloud-attachments/
+.claude/
+assets/
+tests/
