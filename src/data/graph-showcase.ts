@@ -1,6 +1,6 @@
-/** Copy for the interactive relationship graph demo (Proxima Fusion work sample). */
+/** Copy for the interactive task-run graph demo (Proxima Fusion work sample). */
 export const graphShowcase = {
-  title: "Relationship graph",
+  title: "Task-run graph: 1,388 nodes → 52",
   /** The experience entry this was built in; its logo, role and dates are shown. */
   companyId: "proxima-fusion",
   lede: "The task-run graph I redesigned and shipped at Proxima Fusion, rebuilt here on mock data so you can try it. Switch to Before to see the problem it solved.",

@@ -8,6 +8,8 @@ import { cn } from "@/lib/utils";
 
 export interface GraphActions {
   mode: "before" | "after";
+  /** Laid out top to bottom (phones), so edges attach top and bottom. */
+  vertical: boolean;
   /** Task groups that can still be added from the anchor's menu. */
   available: { key: string; name: string; runs: number }[];
   menuOpen: boolean;
@@ -28,12 +30,26 @@ const useActions = () => {
 
 const short = (id: string) => (id.length > 14 ? `${id.slice(0, 13)}…` : id);
 
-/** Invisible connection points; edges attach left (in) and right (out). */
+/**
+ * Invisible connection points; edges attach left (in) and right (out), or
+ * top and bottom when the graph is laid out vertically.
+ */
 function Ports() {
+  const { vertical } = useActions();
   return (
     <>
-      <Handle type="target" position={Position.Left} className="rg-port" isConnectable={false} />
-      <Handle type="source" position={Position.Right} className="rg-port" isConnectable={false} />
+      <Handle
+        type="target"
+        position={vertical ? Position.Top : Position.Left}
+        className="rg-port"
+        isConnectable={false}
+      />
+      <Handle
+        type="source"
+        position={vertical ? Position.Bottom : Position.Right}
+        className="rg-port"
+        isConnectable={false}
+      />
     </>
   );
 }

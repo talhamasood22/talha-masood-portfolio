@@ -231,10 +231,17 @@ export function buildAfter(expanded: string[], runIndex: Record<string, number>)
   return { nodes, edges };
 }
 
-/** Left-to-right layered layout, the same approach as the production graph. */
-export function layoutGraph(nodes: PlainNode[], edges: PlainEdge[]) {
+/**
+ * Layered layout, the same approach as the production graph: left to right
+ * by default, top to bottom where the canvas is too narrow for the ranks.
+ */
+export function layoutGraph(
+  nodes: PlainNode[],
+  edges: PlainEdge[],
+  direction: "LR" | "TB" = "LR"
+) {
   const g = new Graph();
-  g.setGraph({ rankdir: "LR", nodesep: 22, ranksep: 64, marginx: 16, marginy: 16 });
+  g.setGraph({ rankdir: direction, nodesep: 22, ranksep: 64, marginx: 16, marginy: 16 });
   g.setDefaultEdgeLabel(() => ({}));
   for (const n of nodes) g.setNode(n.id, { width: n.width, height: n.height });
   for (const e of edges) g.setEdge(e.source, e.target);

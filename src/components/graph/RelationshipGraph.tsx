@@ -8,6 +8,7 @@ import {
   Panel,
   useNodesState,
   useReactFlow,
+  useUpdateNodeInternals,
   type Edge,
   type Node,
   type NodeTypes,
@@ -32,6 +33,19 @@ const nodeTypes: NodeTypes = { object: ObjectNode, task: TaskNode };
 
 /** Breathing room between the graph and the canvas edge when it is framed. */
 const FIT_PADDING = "48px";
+/** Phones have little width to spare, so the frame is tighter there. */
+const FIT_PADDING_NARROW = "16px";
+
+/** Below this the node labels stop being readable on a phone. */
+const NARROW_MIN_ZOOM = 0.45;
+
+const NARROW_QUERY = "(max-width: 639px)";
+const subscribeNarrow = (onChange: () => void) => {
+  const query = window.matchMedia(NARROW_QUERY);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+};
+const isNarrow = () => window.matchMedia(NARROW_QUERY).matches;
 
 type Mode = "before" | "after";
 
@@ -72,11 +86,17 @@ function GraphCanvas({ caption }: { caption: string }) {
   // re-frame, in either view.
   const [resetCount, setResetCount] = useState(0);
   const { fitView } = useReactFlow();
+  const updateNodeInternals = useUpdateNodeInternals();
+  // On a phone the grouped graph is laid out top to bottom: its ranks are
+  // too wide to fit side by side at a readable size, but stacked they fit
+  // the whole canvas. "Before" keeps its left-to-right wall of nodes.
+  const narrow = useSyncExternalStore(subscribeNarrow, isNarrow, () => false);
+  const vertical = narrow && mode === "after";
 
   const graph = useMemo(() => {
     const { nodes, edges } =
       mode === "before" ? buildBefore() : buildAfter(expanded, runIndex);
-    const placed = layoutGraph(nodes, edges);
+    const placed = layoutGraph(nodes, edges, vertical ? "TB" : "LR");
     return {
       nodes: placed.map(
         (n): Node<GraphNodeData> => ({
@@ -105,7 +125,7 @@ function GraphCanvas({ caption }: { caption: string }) {
     };
     // resetCount only forces a fresh layout object; it does not change it.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode, expanded, runIndex, resetCount]);
+  }, [mode, expanded, runIndex, resetCount, vertical]);
 
   // The laid-out nodes seed React Flow's own node state, so visitors can drag
   // nodes around; any change to the graph lays it out afresh.
@@ -114,28 +134,36 @@ function GraphCanvas({ caption }: { caption: string }) {
     setNodes(graph.nodes);
   }, [graph.nodes, setNodes]);
 
+  // Handles move between the sides and the top and bottom when the layout
+  // direction flips, so React Flow has to re-measure where edges attach.
+  useEffect(() => {
+    updateNodeInternals(graph.nodes.map((n) => n.id));
+    // Only on a direction change; new nodes are measured as they mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vertical, updateNodeInternals]);
+
   // Frame the graph whenever its shape changes (not when a run is cycled,
-  // so the view does not jump while you step through runs).
-  const shapeKey = `${mode}:${expanded.join(",")}:${resetCount}`;
-  // On a phone, fitting the whole grouped graph makes it unreadably small,
-  // so it opens at a legible zoom around the centre and you pan for the
-  // rest. "Before" always fits everything: the wall of nodes is the point.
+  // so the view does not jump while you step through runs). The starting
+  // graph always fits whole. On a phone, once several groups are added the
+  // zoom stops at a still-legible floor and you pan for the rest; "Before"
+  // always fits everything, as the wall of nodes is the point.
+  const shapeKey = `${mode}:${expanded.join(",")}:${resetCount}:${vertical}`;
   useEffect(() => {
     const id = window.setTimeout(() => {
-      const narrow = window.matchMedia("(max-width: 639px)").matches;
       fitView({
-        padding: FIT_PADDING,
+        padding: narrow ? FIT_PADDING_NARROW : FIT_PADDING,
         duration: 450,
         maxZoom: 1,
-        minZoom: narrow && mode === "after" ? 0.62 : undefined,
+        minZoom: vertical ? NARROW_MIN_ZOOM : undefined,
       });
     }, 40);
     return () => window.clearTimeout(id);
-  }, [shapeKey, mode, fitView]);
+  }, [shapeKey, narrow, vertical, fitView]);
 
   const actions = useMemo<GraphActions>(
     () => ({
       mode,
+      vertical,
       available: taskTypes
         .filter((t) => !expanded.includes(t.key))
         .map((t) => ({ key: t.key, name: t.name, runs: t.runs.length })),
@@ -155,7 +183,7 @@ function GraphCanvas({ caption }: { caption: string }) {
       },
       jump: (key, index) => setRunIndex((map) => ({ ...map, [key]: index })),
     }),
-    [mode, expanded, menuOpen]
+    [mode, vertical, expanded, menuOpen]
   );
 
   // Back to the starting state: in After, only TaskRun A on its first run;
@@ -216,8 +244,8 @@ function GraphCanvas({ caption }: { caption: string }) {
           role="region"
           aria-label={
             mode === "before"
-              ? "Relationship graph before the redesign: every task run drawn separately"
-              : "Relationship graph after the redesign: task runs grouped by type"
+              ? "Task-run graph before the redesign: every task run drawn separately"
+              : "Task-run graph after the redesign: task runs grouped by type"
           }
         >
           <ReactFlow
