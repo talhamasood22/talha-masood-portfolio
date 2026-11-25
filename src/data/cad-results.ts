@@ -58,11 +58,11 @@ export const METRICS: Metric[] = [
   {
     id: "requirements",
     agent: "Reasoning",
-    label: "Requirements extracted",
-    definition: "Share of the prompt's requirements the reasoning agent pulled out correctly.",
+    label: "Understood the request",
+    definition: "Share of the request's requirements the model picked up correctly.",
     better: "higher",
     finding:
-      "Qwen2.5-Coder-7B-Instruct was best on all five parts (0.67–0.90). Llama-3.1-8B-Instruct and Gemma-2-9B-it never got above 0.47.",
+      "Qwen2.5-Coder-7B-Instruct understood the most on every part. The other two caught less than half of what was asked.",
     data: {
       box: { qwen: v(0.8), llama: v(0.35), gemma: v(0.2) },
       cylinder: { qwen: v(0.9), llama: v(0.217), gemma: v(0.47) },
@@ -90,11 +90,11 @@ export const METRICS: Metric[] = [
   {
     id: "compile",
     agent: "Reasoning",
-    label: "Code that compiles",
-    definition: "Share of runs whose generated CadQuery code compiled.",
+    label: "Code that ran",
+    definition: "Share of runs where the generated CAD code ran without errors.",
     better: "higher",
     finding:
-      "Every model compiled the box every time. On the chair, at most 3 runs in 10 produced code that ran.",
+      "Every model's code ran every time on the simple box. On the chair, at most 3 runs in 10 worked.",
     data: {
       box: { qwen: v(1), llama: v(1), gemma: v(1) },
       cylinder: { qwen: v(0.8), llama: v(0.6), gemma: v(0.5) },
@@ -107,12 +107,11 @@ export const METRICS: Metric[] = [
     id: "pointcloud",
     decimals: 3,
     agent: "Generation",
-    label: "Average shape error",
-    definition:
-      "Normalized average point-cloud distance between the generated part and the ground truth.",
+    label: "Shape error",
+    definition: "How far the built part was from the correct one; 0 is a perfect match.",
     better: "lower",
     finding:
-      "Qwen2.5-Coder-7B-Instruct had the lowest error on average (0.046, against 0.130 for Gemma-2-9B-it and 0.310 for Llama-3.1-8B-Instruct). Llama-3.1-8B-Instruct scores best on the chair, but its model isn't a chair: once the shape is wrong, the metric stops meaning much.",
+      "Qwen2.5-Coder-7B-Instruct's parts were closest on average. On the chair the score stops meaning much: no model built a complete chair.",
     data: {
       box: { qwen: v(0.066), llama: v(0.932), gemma: v(0.056) },
       cylinder: { qwen: v(0.001), llama: v(0.33), gemma: v(0.242) },
@@ -155,3 +154,6 @@ export const METRICS: Metric[] = [
     },
   },
 ];
+
+/** The metrics the page shows; the rest stay here, verified, for reference. */
+export const SHOWN_METRIC_IDS = ["requirements", "compile", "pointcloud"] as const;

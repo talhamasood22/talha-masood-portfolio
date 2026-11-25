@@ -262,14 +262,12 @@ export const projects: ProjectItem[] = [
     category: "Applied LLMs",
     isFeatured: true,
     summary:
-      "Can 7–9B open models turn a plain-language description of a part into CAD code that actually runs? In a three-person university project we built a loop of three agents that writes CadQuery, exports STEP, STL and PNG files, and shows the part in a 3D viewer. Then we tested Qwen2.5-Coder-7B-Instruct, Llama-3.1-8B-Instruct and Gemma-2-9B-it in each agent role against hand-built ground-truth models on five parts of rising difficulty.",
+      "A three-person university project: can small, free AI models turn a written description of a part, like \"a box 80 × 50 × 30 mm\", into a working 3D model? We built a three-step pipeline and tested three open models at each step. I built the FastAPI backend that runs the pipeline and the Next.js frontend where you type a request, see the part in 3D and download the files.",
     architecture: [
-      "Reasoning agent: turns the prompt into a JSON brief of requirements, dimensions and assumptions.",
-      "Generation agent: writes CadQuery from the brief, run in a sandbox with import checks and a timeout.",
-      "Feedback agent: compares the result with the brief and sends repair instructions, up to three attempts.",
+      "Understand: turns the request into a checklist of features and dimensions.",
+      "Build: writes CAD code in Python (CadQuery) and runs it safely to produce 3D files.",
+      "Check: compares the part with the checklist and asks for a fix, up to three tries.",
     ],
-    metrics:
-      "Qwen2.5-Coder-7B-Instruct, Llama-3.1-8B-Instruct and Gemma-2-9B-it, 10 runs per model per part, scored on requirements, compile rate, point-cloud and Hausdorff distance, and verdict accuracy",
     techStack: ["Python", "vLLM", "CadQuery", "FastAPI", "Pydantic", "Next.js", "Three.js"],
   },
   {
