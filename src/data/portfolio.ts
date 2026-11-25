@@ -129,7 +129,7 @@ export const personalInfo: PersonalInfo = {
   name: "Talha Masood",
   title: "Full-stack engineer, internal tools",
   headline:
-    "Full-stack engineer with two and a half years in production web and mobile, and two more building research and test tooling. Right now that's at Proxima Fusion, turning a task-run graph too dense to read into one scientists can actually use.",
+    "Full-stack engineer: two and a half years full-time on production web and mobile, then two years part-time on research and test tooling alongside my M.Sc. Right now that's at Proxima Fusion, turning a task-run graph too dense to read into one scientists can actually use.",
   location: "Stuttgart, Germany",
   // Contact details live in .env.local (gitignored) so they never reach the repo.
   // See .env.example.

@@ -245,6 +245,40 @@ button,
   box-shadow: 0 16px 40px -18px rgb(8 30 48 / 0.7);
 }
 
+/* A band in the page colour behind the floating bars, full width at the top
+   of the screen. Without it, text scrolling under the bar shows above and
+   beside the pill and reads as content colliding with it. It fades out at its
+   lower edge so the page doesn't look cut by a hard line. */
+.site-header::before,
+.site-dock::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: -0.75rem;
+  height: calc(var(--header-h) + 1.5rem);
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    var(--page) 0%,
+    var(--page) 62%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+.site-header[data-scrolled="true"]::before,
+.site-dock[data-docked="true"]::before {
+  opacity: 1;
+}
+
+/* Morph mode: the band arrives with the pill's own surface. */
+.site-dock[data-morph="true"]::before {
+  opacity: var(--dock-bg, 0);
+  transition: none;
+}
+
 /* Large screens: the floating panel in the left gutter. */
 .nav-panel {
   border: 1px solid var(--hairline);
@@ -370,6 +404,21 @@ button,
     animation: dock-surface-in linear both;
     animation-timeline: scroll(root block);
     animation-range: calc(var(--morph-d) * 0.85) var(--morph-d);
+  }
+
+  html[data-morph] .site-dock::before {
+    animation: dock-band-in linear both;
+    animation-timeline: scroll(root block);
+    animation-range: calc(var(--morph-d) * 0.85) var(--morph-d);
+  }
+}
+
+@keyframes dock-band-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
