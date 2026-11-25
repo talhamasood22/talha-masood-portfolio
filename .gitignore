@@ -41,10 +41,9 @@ yarn-error.log*
 next-env.d.ts
 !.env.example
 
-# Personal files: kept on this machine, never committed.
-# (Cloud Build still uploads them; see .gcloudignore.)
-/public/Talha_Masood_Resume.pdf
-/public/images/profile.jpg
+# Source photos for the profile picture (the site uses public/images/profile.jpg).
+# The resume and profile photo are committed: the repo is private and Vercel
+# builds from it.
 /assets/
 
 # Local tool state
