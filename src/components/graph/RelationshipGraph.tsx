@@ -33,8 +33,9 @@ const nodeTypes: NodeTypes = { object: ObjectNode, task: TaskNode };
 
 /** Breathing room between the graph and the canvas edge when it is framed. */
 const FIT_PADDING = "48px";
-/** Phones have little width to spare, so the frame is tighter there. */
-const FIT_PADDING_NARROW = "16px";
+/** Phones have little width to spare, so the frame is tighter there, except
+ *  at the top, which keeps clear of the caption pill in the corner. */
+const FIT_PADDING_NARROW = { top: "52px", right: "16px", bottom: "16px", left: "16px" } as const;
 
 /** Below this the node labels stop being readable on a phone. */
 const NARROW_MIN_ZOOM = 0.45;

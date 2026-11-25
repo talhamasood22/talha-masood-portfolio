@@ -85,6 +85,8 @@ export interface ProjectItem {
   architecture?: string[];
   demoUrl?: string;
   githubUrl?: string;
+  /** No public code: say so, so "where's the repo?" has an answer. */
+  codePrivate?: boolean;
 }
 
 export interface CourseModule {
@@ -131,7 +133,7 @@ export const personalInfo: PersonalInfo = {
   name: "Talha Masood",
   title: "Full-stack engineer, internal tools",
   headline:
-    "Full-stack engineer: two and a half years full-time on production web and mobile, then two years part-time on research and test tooling alongside my M.Sc. Right now that's at Proxima Fusion, turning a task-run graph too dense to read into one scientists can actually use.",
+    "Over four years building software: two and a half full-time on production web and mobile apps, then two part-time on research and test tooling alongside my M.Sc. Right now I'm at Proxima Fusion, turning a task-run graph too dense to read into one scientists can actually use.",
   location: "Stuttgart, Germany",
   // Contact details live in .env.local (gitignored) so they never reach the repo.
   // See .env.example.
@@ -213,7 +215,7 @@ export const experiences: ExperienceItem[] = [
     story: [
       "Proxima's scientists run a lot of computations, and I build the internal tools they use to keep track of them.",
       "The piece I'm proudest of is the task-run graph. Lineages had grown so dense they stopped being useful, so I designed an aggregation that groups runs by the object they act on, their direction and their task type, without merging lineages that are genuinely independent. On the worst production graph it cut 1,388 nodes to 52.",
-      "I also made every pull request deploy its own staging-like environment in about five minutes, so scientists can try a change before it merges, and built the explorer they use to find the failed, slow or uncommitted runs.",
+      "I also made every pull request deploy its own staging-like environment in about five minutes. More than 40 scientists and the AI agents across the company use them: whoever opens the pull request shares the link with the people who asked for the change, so they can try it before it merges. And I built the explorer they use to find the failed, slow or uncommitted runs.",
     ],
     link: { href: "#graph", label: "Try the rebuilt graph" },
     techStack: ["TypeScript", "React Flow", "FastAPI", "Terraform", "Cloud Run"],
@@ -260,6 +262,7 @@ export const experiences: ExperienceItem[] = [
 export const projects: ProjectItem[] = [
   {
     id: "multi-agent-cad",
+    codePrivate: true,
     title: "Can small open models write CAD?",
     category: "Applied LLMs",
     isFeatured: true,
@@ -275,6 +278,7 @@ export const projects: ProjectItem[] = [
   },
   {
     id: "body-posture-classifier",
+    codePrivate: true,
     title: "Real-time body posture classifier",
     category: "Computer vision",
     isFeatured: false,
@@ -284,6 +288,7 @@ export const projects: ProjectItem[] = [
   },
   {
     id: "precision-agriculture",
+    codePrivate: true,
     title: "Vertical farming system",
     category: "IoT and ML",
     isFeatured: false,

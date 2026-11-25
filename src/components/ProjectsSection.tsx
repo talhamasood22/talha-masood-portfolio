@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Lock } from "lucide-react";
 import { SectionHeader } from "@/components/SectionHeader";
 import { CadModelChips, CadResults } from "@/components/CadResults";
 import { projects, type ProjectItem } from "@/data/portfolio";
@@ -17,7 +17,14 @@ function ProjectLinks({ project }: { project: ProjectItem }) {
     project.githubUrl && { href: project.githubUrl, label: "Source" },
   ].filter(Boolean) as { href: string; label: string }[];
 
-  if (links.length === 0) return null;
+  if (links.length === 0) {
+    return project.codePrivate ? (
+      <p className="mt-4 flex items-center gap-1.5 text-small text-faint">
+        <Lock className="h-3.5 w-3.5" aria-hidden="true" />
+        The code is private. I&apos;m happy to walk you through it.
+      </p>
+    ) : null;
+  }
 
   return (
     <p className="mt-4 flex flex-wrap gap-x-5 gap-y-1">
