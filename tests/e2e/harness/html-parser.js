@@ -285,8 +285,7 @@ function findText(root, pattern) {
 function loadDocument(workspaceDir = process.cwd()) {
   const buildPaths = [
     path.join(workspaceDir, '.next/server/app/page.html'),
-    path.join(workspaceDir, '.next/server/app/index.html'),
-    path.join(workspaceDir, '.next/standalone/.next/server/app/page.html')
+    path.join(workspaceDir, '.next/server/app/index.html')
   ];
 
   let buildHtml = '';

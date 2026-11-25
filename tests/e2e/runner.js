@@ -130,7 +130,7 @@ function validateArgs(options) {
   // Validate --filter flag
   if (options.filter !== null) {
     if (options.filter === undefined || options.filter === '' || options.filter === true) {
-      console.error(colors ? colors.red('Error: Flag --filter requires a value (e.g. "Docker").') : 'Error: Flag --filter requires a value (e.g. "Docker").');
+      console.error(colors ? colors.red('Error: Flag --filter requires a value (e.g. "Contact").') : 'Error: Flag --filter requires a value (e.g. "Contact").');
       process.exit(1);
     }
     options.filter = String(options.filter).trim();
@@ -164,7 +164,7 @@ Examples:
   node tests/e2e/runner.js
   node tests/e2e/runner.js --tier 1
   node tests/e2e/runner.js --feature F6
-  node tests/e2e/runner.js --filter "Docker"
+  node tests/e2e/runner.js --filter "Contact"
 `);
 }
 

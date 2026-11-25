@@ -13,7 +13,6 @@ const { loadDocument } = require('./harness/html-parser');
 const { checkMobileOverflowRisk, checkTouchTargetSize } = require('./harness/tailwind-inspector');
 const { calculateContrastRatio, extractProjectTokens, verifyFonts, DESIGN_TOKENS } = require('./harness/design-token-verifier');
 const { extractSections, extractSentences, findDuplicateSentences, extractMetricClaims, verifyProfessionalTone } = require('./harness/content-verifier');
-const { validateDockerfile, validateCloudRunDeployScript, validateDeploymentReadme } = require('./harness/docker-validator');
 
 function registerTier4(engine, workspaceDir = process.cwd()) {
   engine.tier(4, 'Real-World Application Scenarios (5 Comprehensive Scenarios)', () => {
@@ -104,30 +103,6 @@ function registerTier4(engine, workspaceDir = process.cwd()) {
         if (fs.existsSync(globalsCssPath)) fontConfigs += fs.readFileSync(globalsCssPath, 'utf8');
         const fontCheck = verifyFonts(fontConfigs);
         assert.ok(fontCheck.isCompliant, `Found banned fonts: ${fontCheck.bannedFontsFound.join(', ')}`);
-      });
-
-      // ─── Scenario 4: Enterprise Docker & Google Cloud Run Deploy ────────────
-      engine.test('T4.4: Scenario 4: Enterprise Docker & Google Cloud Run Deploy', () => {
-        const dockerfilePath = path.join(workspaceDir, 'Dockerfile');
-        const scriptPath = path.join(workspaceDir, 'deploy-cloudrun.sh');
-        const readmePath = path.join(workspaceDir, 'README.md');
-
-        if (!fs.existsSync(dockerfilePath) || !fs.existsSync(scriptPath) || !fs.existsSync(readmePath)) {
-          assert.fail('Dockerfile, deploy-cloudrun.sh, and README.md must all be present (Feature M3 pending)');
-        }
-
-        const dockerVal = validateDockerfile(fs.readFileSync(dockerfilePath, 'utf8'));
-        assert.ok(dockerVal.isMultiStage, 'Dockerfile must be multi-stage');
-        assert.ok(dockerVal.switchesToNonRoot, 'Dockerfile must run as non-root user');
-        assert.ok(dockerVal.setsPort8080, 'Dockerfile must set PORT=8080');
-
-        const scriptVal = validateCloudRunDeployScript(fs.readFileSync(scriptPath, 'utf8'));
-        assert.ok(scriptVal.deploysCloudRun, 'Script must contain gcloud run deploy');
-        assert.ok(scriptVal.usesPort8080, 'Script must configure port 8080');
-
-        const readmeVal = validateDeploymentReadme(fs.readFileSync(readmePath, 'utf8'));
-        assert.ok(readmeVal.hasLocalDev, 'README must document local run');
-        assert.ok(readmeVal.hasCloudRunDeploy, 'README must document Cloud Run deployment');
       });
 
       // ─── Scenario 5: Anti-Duplication & Content Verification Across All Sections

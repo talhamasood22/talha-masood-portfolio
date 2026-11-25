@@ -13,7 +13,6 @@ const { loadDocument, querySelector, querySelectorAll, getElementById } = requir
 const { getEffectiveDisplay, checkTouchTargetSize } = require('./harness/tailwind-inspector');
 const { verifyDoubleBezel, verifyFocusVisibleRing, calculateContrastRatio, DESIGN_TOKENS } = require('./harness/design-token-verifier');
 const { extractSections, extractSentences, findDuplicateSentences } = require('./harness/content-verifier');
-const { validateDockerfile, validateCloudRunDeployScript, validateCloudBuildYaml } = require('./harness/docker-validator');
 
 function registerTier3(engine, workspaceDir = process.cwd()) {
   engine.tier(3, 'Pairwise Cross-Feature Combinations (15 Interaction Tests)', () => {
@@ -74,44 +73,6 @@ function registerTier3(engine, workspaceDir = process.cwd()) {
         assert.ok(hasSkip, 'Document must provide accessible Skip to Content bypass link');
       });
 
-      engine.test('T3.9: Next.js Standalone × Multi-Stage Dockerfile', () => {
-        const nextConfigPath = path.join(workspaceDir, 'next.config.mjs');
-        const dockerfilePath = path.join(workspaceDir, 'Dockerfile');
-
-        let nextConfigStandalone = false;
-        if (fs.existsSync(nextConfigPath)) {
-          nextConfigStandalone = fs.readFileSync(nextConfigPath, 'utf8').includes('standalone');
-        }
-
-        let dockerfileCopiesStandalone = false;
-        if (fs.existsSync(dockerfilePath)) {
-          const val = validateDockerfile(fs.readFileSync(dockerfilePath, 'utf8'));
-          dockerfileCopiesStandalone = val.copiesStandalone;
-        }
-
-        assert.ok(
-          nextConfigStandalone && dockerfileCopiesStandalone,
-          'Next.js standalone configuration must feed directly into Dockerfile runner stage'
-        );
-      });
-
-      engine.test('T3.10: Dockerfile Port 8080 × Cloud Run Deploy Script', () => {
-        const dockerfilePath = path.join(workspaceDir, 'Dockerfile');
-        const scriptPath = path.join(workspaceDir, 'deploy-cloudrun.sh');
-
-        if (!fs.existsSync(dockerfilePath) || !fs.existsSync(scriptPath)) {
-          assert.fail('Both Dockerfile and deploy-cloudrun.sh must be present');
-        }
-
-        const dockerVal = validateDockerfile(fs.readFileSync(dockerfilePath, 'utf8'));
-        const scriptVal = validateCloudRunDeployScript(fs.readFileSync(scriptPath, 'utf8'));
-
-        assert.ok(
-          dockerVal.setsPort8080 && scriptVal.usesPort8080,
-          'Dockerfile PORT=8080 must match Cloud Run deployment script port configuration'
-        );
-      });
-
       engine.test('T3.11: Non-Duplication × Hero Metrics & Experience', () => {
         const sections = extractSections(doc);
         const heroSentences = extractSentences(sections.hero, 6);
@@ -137,20 +98,6 @@ function registerTier3(engine, workspaceDir = process.cwd()) {
       engine.test('T3.14: Modern Typography × German Academic Modules', () => {
         const hasGermanModule = /Service Management|Cloud Computing|Evaluation/i.test(doc.raw);
         assert.ok(hasGermanModule, 'Modern typography must render long German academic course titles cleanly');
-      });
-
-      engine.test('T3.15: Cloud Build Pipeline × Dockerfile Build Args', () => {
-        const yamlPath = path.join(workspaceDir, 'cloudbuild.yaml');
-        const dockerfilePath = path.join(workspaceDir, 'Dockerfile');
-
-        if (!fs.existsSync(yamlPath) || !fs.existsSync(dockerfilePath)) {
-          assert.fail('Both cloudbuild.yaml and Dockerfile must exist');
-        }
-
-        const buildVal = validateCloudBuildYaml(fs.readFileSync(yamlPath, 'utf8'));
-        const dockerVal = validateDockerfile(fs.readFileSync(dockerfilePath, 'utf8'));
-
-        assert.ok(buildVal.isCompliant && dockerVal.isCompliant, 'Cloud Build pipeline and Dockerfile must align for production CI/CD');
       });
     });
   });

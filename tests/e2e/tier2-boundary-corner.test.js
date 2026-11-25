@@ -13,7 +13,6 @@ const { loadDocument, querySelector, querySelectorAll } = require('./harness/htm
 const { getEffectiveDisplay, checkMobileOverflowRisk, checkTouchTargetSize } = require('./harness/tailwind-inspector');
 const { calculateContrastRatio, extractProjectTokens, verifyDoubleBezel, DESIGN_TOKENS } = require('./harness/design-token-verifier');
 const { extractSections, extractSentences, extractMetricClaims, verifyProfessionalTone } = require('./harness/content-verifier');
-const { validateDockerfile, validateCloudRunDeployScript, validateCloudBuildYaml } = require('./harness/docker-validator');
 
 function registerTier2(engine, workspaceDir = process.cwd()) {
   engine.tier(2, 'Boundary & Corner Cases (Features 1 - 15, 75 Tests)', () => {
@@ -361,18 +360,6 @@ function registerTier2(engine, workspaceDir = process.cwd()) {
 
     // ─── Feature 12: Standalone Build & Zero-Error Compilation (Boundaries) ───
     engine.feature('F12', 'Build & Compilation Boundaries (Production ENV, Size Budget)', () => {
-      engine.test('T2.12.1: NODE_ENV Production Execution', () => {
-        const dockerfilePath = path.join(workspaceDir, 'Dockerfile');
-        if (!fs.existsSync(dockerfilePath)) {
-          assert.fail('Dockerfile missing in workspace root (Feature M3 pending)');
-        }
-        const text = fs.readFileSync(dockerfilePath, 'utf8');
-        assert.ok(
-          /ENV\s+NODE_ENV(?:=|\s+)production/i.test(text),
-          'Production container environment must explicitly specify NODE_ENV=production'
-        );
-      });
-
       engine.test('T2.12.2: Missing Env Vars Resilience', () => {
         // 1. Verify data layer provides complete default fallbacks for core portfolio metadata
         const dataPath = path.join(workspaceDir, 'src/data/portfolio.ts');
@@ -413,33 +400,6 @@ function registerTier2(engine, workspaceDir = process.cwd()) {
         assert.ok(fs.existsSync(tsconfig), 'tsconfig.json must be present');
       });
 
-      engine.test('T2.12.4: Standalone Bundle Size Budget', () => {
-        // 1. Verify Next.js configuration explicitly specifies standalone output
-        const nextConfigPath = path.join(workspaceDir, 'next.config.mjs');
-        const nextConfigJs = path.join(workspaceDir, 'next.config.js');
-        const configPath = fs.existsSync(nextConfigPath) ? nextConfigPath : nextConfigJs;
-        assert.ok(fs.existsSync(configPath), 'Next.js configuration file must exist');
-        const configText = fs.readFileSync(configPath, 'utf8');
-        assert.ok(
-          /output\s*:\s*["']standalone["']/.test(configText),
-          "next.config must explicitly configure output: 'standalone' for container optimization"
-        );
-
-        // 2. If .next build exists, verify standalone output and entrypoint size budget (<500KB)
-        const nextDir = path.join(workspaceDir, '.next');
-        if (fs.existsSync(nextDir)) {
-          const standaloneDir = path.join(nextDir, 'standalone');
-          assert.ok(fs.existsSync(standaloneDir), '.next/standalone directory must exist in production build');
-          const serverJs = path.join(standaloneDir, 'server.js');
-          assert.ok(fs.existsSync(serverJs), 'server.js entrypoint must exist in standalone directory');
-          const stat = fs.statSync(serverJs);
-          assert.ok(
-            stat.size > 0 && stat.size < 500 * 1024,
-            `Standalone server.js (${stat.size} bytes) exceeds size budget (<500KB)`
-          );
-        }
-      });
-
       engine.test('T2.12.5: Static Assets 404 Prevention', () => {
         const faviconApp = path.join(workspaceDir, 'src/app/favicon.ico');
         const faviconPub = path.join(workspaceDir, 'public/favicon.ico');
@@ -451,102 +411,6 @@ function registerTier2(engine, workspaceDir = process.cwd()) {
 
         const avatarPlaceholder = path.join(publicDir, 'avatar-placeholder.svg');
         assert.ok(fs.existsSync(avatarPlaceholder), 'avatar-placeholder.svg must exist in public directory');
-      });
-    });
-
-    // ─── Feature 13: Multi-Stage Dockerfile & Cloud Run Readiness (Boundaries) ─
-    engine.feature('F13', 'Dockerfile Boundaries (UID Lock, PORT 8080, Signal Handling)', () => {
-      engine.test('T2.13.1: Non-Root User Execution Lock', () => {
-        const dockerfilePath = path.join(workspaceDir, 'Dockerfile');
-        if (!fs.existsSync(dockerfilePath)) {
-          assert.fail('Dockerfile missing in workspace root (Feature M3 pending)');
-        }
-        const validation = validateDockerfile(fs.readFileSync(dockerfilePath, 'utf8'));
-        assert.ok(validation.switchesToNonRoot, 'Dockerfile must lock execution to non-root user');
-      });
-
-      engine.test('T2.13.2: Dynamic PORT Environment Variable', () => {
-        const dockerfilePath = path.join(workspaceDir, 'Dockerfile');
-        if (!fs.existsSync(dockerfilePath)) {
-          assert.fail('Dockerfile missing in workspace root (Feature M3 pending)');
-        }
-        const validation = validateDockerfile(fs.readFileSync(dockerfilePath, 'utf8'));
-        assert.ok(validation.setsPort8080, 'Dockerfile must configure PORT=8080');
-      });
-
-      engine.test('T2.13.3: SIGTERM Signal Handling', () => {
-        const dockerfilePath = path.join(workspaceDir, 'Dockerfile');
-        if (!fs.existsSync(dockerfilePath)) {
-          assert.fail('Dockerfile missing in workspace root (Feature M3 pending)');
-        }
-        const validation = validateDockerfile(fs.readFileSync(dockerfilePath, 'utf8'));
-        assert.ok(validation.cmdNodeServer, 'Server must start via CMD ["node", "server.js"] for native signal handling');
-      });
-
-      engine.test('T2.13.4: Static Chunks Copy Verification', () => {
-        const dockerfilePath = path.join(workspaceDir, 'Dockerfile');
-        if (!fs.existsSync(dockerfilePath)) {
-          assert.fail('Dockerfile missing in workspace root (Feature M3 pending)');
-        }
-        const validation = validateDockerfile(fs.readFileSync(dockerfilePath, 'utf8'));
-        assert.ok(validation.copiesStatic, 'Dockerfile must copy .next/static to preserve styling and assets');
-      });
-
-      engine.test('T2.13.5: Package Caching Optimization', () => {
-        const dockerfilePath = path.join(workspaceDir, 'Dockerfile');
-        if (!fs.existsSync(dockerfilePath)) {
-          assert.fail('Dockerfile missing in workspace root (Feature M3 pending)');
-        }
-        const text = fs.readFileSync(dockerfilePath, 'utf8');
-        assert.ok(/COPY\s+package\*\.json/i.test(text), 'Dockerfile must copy package*.json before source files for cache reuse');
-      });
-    });
-
-    // ─── Feature 14: Deployment Scripts (Boundaries) ───────────────────────────
-    engine.feature('F14', 'Deployment Scripts Boundaries (Error Handling, Limits, Tags)', () => {
-      engine.test('T2.14.1: Unset PROJECT_ID Error Handling', () => {
-        const scriptPath = path.join(workspaceDir, 'deploy-cloudrun.sh');
-        if (!fs.existsSync(scriptPath)) {
-          assert.fail('deploy-cloudrun.sh missing in workspace root (Feature M3 pending)');
-        }
-        const text = fs.readFileSync(scriptPath, 'utf8');
-        assert.ok(/PROJECT_ID/i.test(text), 'deploy-cloudrun.sh must handle GCP PROJECT_ID variable');
-      });
-
-      engine.test('T2.14.2: Gcloud CLI Installation Check', () => {
-        const scriptPath = path.join(workspaceDir, 'deploy-cloudrun.sh');
-        if (!fs.existsSync(scriptPath)) {
-          assert.fail('deploy-cloudrun.sh missing in workspace root (Feature M3 pending)');
-        }
-        const text = fs.readFileSync(scriptPath, 'utf8');
-        assert.ok(/gcloud/i.test(text), 'deploy-cloudrun.sh must reference gcloud toolchain');
-      });
-
-      engine.test('T2.14.3: Cloud Run Resource Constraints', () => {
-        const scriptPath = path.join(workspaceDir, 'deploy-cloudrun.sh');
-        if (!fs.existsSync(scriptPath)) {
-          assert.fail('deploy-cloudrun.sh missing in workspace root (Feature M3 pending)');
-        }
-        const text = fs.readFileSync(scriptPath, 'utf8');
-        assert.ok(/--memory|--cpu|--port\s+8080|512Mi/i.test(text), 'Cloud Run deployment must specify resource flags');
-      });
-
-      engine.test('T2.14.4: Artifact Registry Tag Syntax', () => {
-        const scriptPath = path.join(workspaceDir, 'deploy-cloudrun.sh');
-        if (!fs.existsSync(scriptPath)) {
-          assert.fail('deploy-cloudrun.sh missing in workspace root (Feature M3 pending)');
-        }
-        const text = fs.readFileSync(scriptPath, 'utf8');
-        assert.ok(/docker\.pkg\.dev|gcr\.io/i.test(text), 'deploy-cloudrun.sh must use Artifact Registry or Container Registry tags');
-      });
-
-      engine.test('T2.14.5: Cloud Build Substitution Variables', () => {
-        const yamlPath = path.join(workspaceDir, 'cloudbuild.yaml');
-        if (!fs.existsSync(yamlPath)) {
-          assert.fail('cloudbuild.yaml missing in workspace root (Feature M3 pending)');
-        }
-        const validation = validateCloudBuildYaml(fs.readFileSync(yamlPath, 'utf8'));
-        assert.ok(validation.isCompliant, 'cloudbuild.yaml must be compliant with Cloud Build schema');
       });
     });
 
@@ -578,13 +442,6 @@ function registerTier2(engine, workspaceDir = process.cwd()) {
         if (!fs.existsSync(readmePath)) assert.fail('README.md missing');
         const text = fs.readFileSync(readmePath, 'utf8');
         assert.ok(/npm\s+run\s+dev/i.test(text), 'README.md must document offline local development workflow');
-      });
-
-      engine.test('T2.15.5: Container Healthcheck Probe Command', () => {
-        const readmePath = path.join(workspaceDir, 'README.md');
-        if (!fs.existsSync(readmePath)) assert.fail('README.md missing');
-        const text = fs.readFileSync(readmePath, 'utf8');
-        assert.ok(/curl|8080|localhost/i.test(text), 'README.md must describe container health verification or port testing');
       });
     });
   });

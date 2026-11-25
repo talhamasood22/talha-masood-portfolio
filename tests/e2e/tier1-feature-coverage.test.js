@@ -13,7 +13,6 @@ const { loadDocument, querySelector, querySelectorAll, getElementById } = requir
 const { getEffectiveDisplay, getEffectiveGridCols, checkMobileOverflowRisk, parseClasses } = require('./harness/tailwind-inspector');
 const { calculateContrastRatio, extractProjectTokens, verifyFonts, verifyDoubleBezel, DESIGN_TOKENS } = require('./harness/design-token-verifier');
 const { extractSections, extractSentences, findDuplicateSentences, verifyProfessionalTone } = require('./harness/content-verifier');
-const { validateDockerfile, validateCloudRunDeployScript, validateCloudBuildYaml, validateDeploymentReadme } = require('./harness/docker-validator');
 
 function registerTier1(engine, workspaceDir = process.cwd()) {
   engine.tier(1, 'Feature Coverage (Features 1 - 15, 75 Tests)', () => {
@@ -447,15 +446,6 @@ function registerTier1(engine, workspaceDir = process.cwd()) {
         assert.ok(pkg.dependencies && pkg.dependencies.next, 'package.json must have next dependency');
       });
 
-      engine.test('T1.12.2: Next Config Standalone Output', () => {
-        const nextConfigPath = path.join(workspaceDir, 'next.config.mjs');
-        const nextConfigJs = path.join(workspaceDir, 'next.config.js');
-        const exists = fs.existsSync(nextConfigPath) || fs.existsSync(nextConfigJs);
-        assert.ok(exists, 'next.config file must exist');
-        const text = fs.readFileSync(exists ? (fs.existsSync(nextConfigPath) ? nextConfigPath : nextConfigJs) : '', 'utf8');
-        assert.ok(text.includes('output') && text.includes('standalone'), "next.config must configure output: 'standalone'");
-      });
-
       engine.test('T1.12.3: TypeScript Strict Configuration', () => {
         const tsconfigPath = path.join(workspaceDir, 'tsconfig.json');
         assert.ok(fs.existsSync(tsconfigPath), 'tsconfig.json must exist');
@@ -466,157 +456,6 @@ function registerTier1(engine, workspaceDir = process.cwd()) {
       engine.test('T1.12.4: Build Command Clean Exit Code', () => {
         const hasBuildOrSource = fs.existsSync(path.join(workspaceDir, '.next')) || fs.existsSync(path.join(workspaceDir, 'src'));
         assert.ok(hasBuildOrSource, 'Project build directory or source tree must exist');
-      });
-
-      engine.test('T1.12.5: Standalone Artifact Generation', () => {
-        const nextConfigPath = path.join(workspaceDir, 'next.config.mjs');
-        const nextConfigJs = path.join(workspaceDir, 'next.config.js');
-        const confText = fs.readFileSync(fs.existsSync(nextConfigPath) ? nextConfigPath : nextConfigJs, 'utf8');
-        assert.ok(confText.includes('standalone'), 'Next.js configured for standalone output containerization');
-      });
-    });
-
-    // ─── Feature 13: Multi-Stage Dockerfile & Cloud Run Readiness ──────────────
-    engine.feature('F13', 'Multi-Stage Dockerfile & Cloud Run Readiness', () => {
-      engine.test('T1.13.1: Multi-Stage Structure', () => {
-        const dockerfilePath = path.join(workspaceDir, 'Dockerfile');
-        if (!fs.existsSync(dockerfilePath)) {
-          assert.fail('Dockerfile not found in workspace root (Feature M3 pending)');
-        }
-        const validation = validateDockerfile(fs.readFileSync(dockerfilePath, 'utf8'));
-        assert.ok(validation.isMultiStage, 'Dockerfile must define multi-stage build (deps, builder, runner)');
-      });
-
-      engine.test('T1.13.2: Alpine Minimal Base Image', () => {
-        const dockerfilePath = path.join(workspaceDir, 'Dockerfile');
-        if (!fs.existsSync(dockerfilePath)) {
-          assert.fail('Dockerfile not found in workspace root (Feature M3 pending)');
-        }
-        const validation = validateDockerfile(fs.readFileSync(dockerfilePath, 'utf8'));
-        assert.ok(validation.hasAlpine, 'Dockerfile must use node:*-alpine minimal base image');
-      });
-
-      engine.test('T1.13.3: Non-Root User & Group Setup', () => {
-        const dockerfilePath = path.join(workspaceDir, 'Dockerfile');
-        if (!fs.existsSync(dockerfilePath)) {
-          assert.fail('Dockerfile not found in workspace root (Feature M3 pending)');
-        }
-        const validation = validateDockerfile(fs.readFileSync(dockerfilePath, 'utf8'));
-        assert.ok(validation.createsNonRootUser && validation.switchesToNonRoot, 'Dockerfile must create and switch to non-root user nextjs (UID 1001)');
-      });
-
-      engine.test('T1.13.4: Cloud Run Port & Host Configuration', () => {
-        const dockerfilePath = path.join(workspaceDir, 'Dockerfile');
-        if (!fs.existsSync(dockerfilePath)) {
-          assert.fail('Dockerfile not found in workspace root (Feature M3 pending)');
-        }
-        const validation = validateDockerfile(fs.readFileSync(dockerfilePath, 'utf8'));
-        assert.ok(validation.setsPort8080 && validation.exposesPort, 'Dockerfile must configure ENV PORT=8080 and EXPOSE 8080 for Cloud Run');
-      });
-
-      engine.test('T1.13.5: Standalone Artifacts Copying', () => {
-        const dockerfilePath = path.join(workspaceDir, 'Dockerfile');
-        if (!fs.existsSync(dockerfilePath)) {
-          assert.fail('Dockerfile not found in workspace root (Feature M3 pending)');
-        }
-        const validation = validateDockerfile(fs.readFileSync(dockerfilePath, 'utf8'));
-        assert.ok(validation.copiesStandalone, 'Dockerfile runner stage must copy .next/standalone artifacts');
-      });
-    });
-
-    // ─── Feature 14: Deployment Scripts ────────────────────────────────────────
-    engine.feature('F14', 'Deployment Scripts (deploy-cloudrun.sh, cloudbuild.yaml)', () => {
-      engine.test('T1.14.1: Deploy Script Shebang & Strict Mode', () => {
-        const scriptPath = path.join(workspaceDir, 'deploy-cloudrun.sh');
-        if (!fs.existsSync(scriptPath)) {
-          assert.fail('deploy-cloudrun.sh not found in workspace root (Feature M3 pending)');
-        }
-        const validation = validateCloudRunDeployScript(fs.readFileSync(scriptPath, 'utf8'));
-        assert.ok(validation.hasShebang && validation.hasSafeFlags, 'deploy-cloudrun.sh must have bash shebang and set -e strict mode');
-      });
-
-      engine.test('T1.14.2: Cloud Run Service Parameters', () => {
-        const scriptPath = path.join(workspaceDir, 'deploy-cloudrun.sh');
-        if (!fs.existsSync(scriptPath)) {
-          assert.fail('deploy-cloudrun.sh not found in workspace root (Feature M3 pending)');
-        }
-        const validation = validateCloudRunDeployScript(fs.readFileSync(scriptPath, 'utf8'));
-        assert.ok(validation.hasServiceName, 'deploy-cloudrun.sh must specify service name talha-masood-portfolio');
-      });
-
-      engine.test('T1.14.3: Gcloud Run Deploy Command Syntax', () => {
-        const scriptPath = path.join(workspaceDir, 'deploy-cloudrun.sh');
-        if (!fs.existsSync(scriptPath)) {
-          assert.fail('deploy-cloudrun.sh not found in workspace root (Feature M3 pending)');
-        }
-        const validation = validateCloudRunDeployScript(fs.readFileSync(scriptPath, 'utf8'));
-        assert.ok(validation.deploysCloudRun && validation.allowsUnauthenticated, 'deploy-cloudrun.sh must execute gcloud run deploy with --allow-unauthenticated');
-      });
-
-      engine.test('T1.14.4: Cloud Build YAML Pipeline', () => {
-        const yamlPath = path.join(workspaceDir, 'cloudbuild.yaml');
-        if (!fs.existsSync(yamlPath)) {
-          assert.fail('cloudbuild.yaml not found in workspace root (Feature M3 pending)');
-        }
-        const validation = validateCloudBuildYaml(fs.readFileSync(yamlPath, 'utf8'));
-        assert.ok(validation.hasSteps, 'cloudbuild.yaml must define container build and deploy steps');
-      });
-
-      engine.test('T1.14.5: Dockerignore File Configuration', () => {
-        const dockerignorePath = path.join(workspaceDir, '.dockerignore');
-        if (!fs.existsSync(dockerignorePath)) {
-          assert.fail('.dockerignore not found in workspace root (Feature M3 pending)');
-        }
-        const content = fs.readFileSync(dockerignorePath, 'utf8');
-        assert.ok(content.includes('node_modules') && content.includes('.next'), '.dockerignore must exclude node_modules and .next');
-      });
-    });
-
-    // ─── Feature 15: Deployment Guide in README.md ─────────────────────────────
-    engine.feature('F15', 'Deployment Guide in README.md', () => {
-      engine.test('T1.15.1: Prerequisites Section in README', () => {
-        const readmePath = path.join(workspaceDir, 'README.md');
-        if (!fs.existsSync(readmePath)) {
-          assert.fail('README.md not found in workspace root');
-        }
-        const validation = validateDeploymentReadme(fs.readFileSync(readmePath, 'utf8'));
-        assert.ok(validation.hasPrerequisites, 'README.md must document prerequisites (Node.js, Docker, gcloud)');
-      });
-
-      engine.test('T1.15.2: Local Development & Build Commands', () => {
-        const readmePath = path.join(workspaceDir, 'README.md');
-        if (!fs.existsSync(readmePath)) {
-          assert.fail('README.md not found in workspace root');
-        }
-        const validation = validateDeploymentReadme(fs.readFileSync(readmePath, 'utf8'));
-        assert.ok(validation.hasLocalDev, 'README.md must document local development commands (npm run dev)');
-      });
-
-      engine.test('T1.15.3: Local Docker Container Testing', () => {
-        const readmePath = path.join(workspaceDir, 'README.md');
-        if (!fs.existsSync(readmePath)) {
-          assert.fail('README.md not found in workspace root');
-        }
-        const validation = validateDeploymentReadme(fs.readFileSync(readmePath, 'utf8'));
-        assert.ok(validation.hasDockerBuild, 'README.md must document local container build commands (docker build)');
-      });
-
-      engine.test('T1.15.4: Google Cloud Run Deployment Steps', () => {
-        const readmePath = path.join(workspaceDir, 'README.md');
-        if (!fs.existsSync(readmePath)) {
-          assert.fail('README.md not found in workspace root');
-        }
-        const validation = validateDeploymentReadme(fs.readFileSync(readmePath, 'utf8'));
-        assert.ok(validation.hasCloudRunDeploy, 'README.md must document Google Cloud Run deployment steps');
-      });
-
-      engine.test('T1.15.5: Production Environment & Architecture Notes', () => {
-        const readmePath = path.join(workspaceDir, 'README.md');
-        if (!fs.existsSync(readmePath)) {
-          assert.fail('README.md not found in workspace root');
-        }
-        const text = fs.readFileSync(readmePath, 'utf8');
-        assert.ok(/port|8080|standalone|cloud run/i.test(text), 'README.md must document architecture and Cloud Run environment notes');
       });
     });
   });

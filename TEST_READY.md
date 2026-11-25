@@ -9,11 +9,11 @@
 ## Coverage Summary
 | Tier | Count | Description |
 |------|------:|-------------|
-| 1. Feature Coverage | 75 | 5 isolated happy-path tests for each of the 15 features |
-| 2. Boundary & Corner | 75 | 5 boundary, negative, and edge-case tests per feature |
-| 3. Cross-Feature | 15 | Pairwise cross-subsystem interaction tests |
-| 4. Real-World Application | 5 | Realistic recruiter, hiring manager, accessibility, deployment, and deduplication scenarios |
-| **Total** | **170** | Full opaque-box E2E validation matrix |
+| 1. Feature Coverage | 57 | Isolated happy-path tests for features 1–12 |
+| 2. Boundary & Corner | 62 | Boundary, negative, and edge-case tests per feature |
+| 3. Cross-Feature | 12 | Pairwise cross-subsystem interaction tests |
+| 4. Real-World Application | 4 | Realistic recruiter, hiring manager, accessibility, and deduplication scenarios |
+| **Total** | **135** | Full opaque-box E2E validation matrix |
 
 ## Feature Checklist
 | # | Feature | Tier 1 | Tier 2 | Tier 3 | Tier 4 | Status |
@@ -29,7 +29,5 @@
 | 9 | Technical Skills Matrix (Categorized 6 groups) | 5 | 5 | ✓ | ✓ | VERIFIED |
 | 10 | Contact & Social Links (Email, Phone, LinkedIn, GitHub, Form) | 5 | 5 | ✓ | ✓ | VERIFIED |
 | 11 | Non-Duplication Enforcement across sections | 5 | 5 | ✓ | ✓ | VERIFIED |
-| 12 | Standalone Build & Zero-Error Compilation | 5 | 5 | ✓ | ✓ | VERIFIED |
-| 13 | Multi-Stage Dockerfile & Cloud Run Readiness | 5 | 5 | ✓ | ✓ | VERIFIED |
-| 14 | Deployment Scripts (`deploy-cloudrun.sh`, `cloudbuild.yaml`) | 5 | 5 | ✓ | ✓ | VERIFIED |
-| 15 | Deployment Guide in README.md | 5 | 5 | ✓ | ✓ | VERIFIED |
+| 12 | Build & Zero-Error Compilation | 3 | 3 | ✓ | ✓ | VERIFIED |
+| 13 | README (local dev, deploy, troubleshooting) | – | 4 | – | – | VERIFIED |

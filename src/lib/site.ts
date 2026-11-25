@@ -1,6 +1,6 @@
 /**
  * Canonical site origin used for absolute URLs in metadata, Open Graph tags and
- * the sitemap. Set NEXT_PUBLIC_SITE_URL at build time (Cloud Run service URL or
+ * the sitemap. Set NEXT_PUBLIC_SITE_URL at build time (Vercel URL or
  * custom domain); localhost is only a development fallback.
  */
 const configured = process.env.NEXT_PUBLIC_SITE_URL;
