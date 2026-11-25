@@ -237,12 +237,24 @@ button,
   -webkit-backdrop-filter: saturate(140%) blur(14px);
   backdrop-filter: saturate(140%) blur(14px);
   box-shadow: 0 12px 32px -20px rgb(8 30 48 / 0.55);
-  transition: border-color 200ms ease, box-shadow 200ms ease;
+  transition: background-color 240ms ease, border-color 200ms ease,
+    box-shadow 200ms ease;
 }
 
 .site-header[data-scrolled="true"] .nav-bar {
   border-color: var(--hairline-strong);
   box-shadow: 0 16px 40px -18px rgb(8 30 48 / 0.7);
+}
+
+/* Until the name docks into it, the bar would be an empty pill holding only
+   the theme and menu buttons. Drop its surface so just the buttons float
+   over the hero; the pill gathers around the name when it arrives. */
+.site-header[data-docked="false"] .nav-bar {
+  border-color: transparent;
+  background-color: transparent;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 
 /* A band in the page colour behind the floating bars, full width at the top
