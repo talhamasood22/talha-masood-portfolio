@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { SITE_URL } from "@/lib/site";
 import { THEME_CHROME } from "@/lib/theme";
 import { personalInfo } from "@/data/portfolio";
+import { Analytics } from "@vercel/analytics/next";
 
 /* One family. Archivo is variable on width as well as weight, so the name and
    headings can be set wide while reading text stays at normal width. */
@@ -110,6 +111,8 @@ export default function RootLayout({
 
           <Footer />
         </div>
+
+        <Analytics />
       </body>
     </html>
   );

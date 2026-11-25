@@ -2,6 +2,7 @@ import React from "react";
 import { ArrowDown, Download } from "lucide-react";
 import { ProfileAvatar } from "@/components/ProfileAvatar";
 import { ButtonLink } from "@/components/ui/ButtonLink";
+import { TrackedCvLink } from "@/components/TrackedCvLink";
 import { SmoothHashLink } from "@/components/SmoothHashLink";
 import { personalInfo } from "@/data/portfolio";
 
@@ -57,7 +58,7 @@ export function HeroSection() {
               <ButtonLink href="#contact" variant="primary" size="lg">
                 Get in touch
               </ButtonLink>
-              <ButtonLink
+              <TrackedCvLink
                 href={personalInfo.resumeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -66,7 +67,7 @@ export function HeroSection() {
                 icon={<Download className="h-4 w-4" aria-hidden="true" />}
               >
                 Download CV
-              </ButtonLink>
+              </TrackedCvLink>
             </div>
           </div>
 

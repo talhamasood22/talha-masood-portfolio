@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Download, Menu, X } from "lucide-react";
 import { NAV_ITEMS, personalInfo } from "@/data/portfolio";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { track } from "@vercel/analytics";
 import { cn } from "@/lib/utils";
 import { scrollToTop } from "@/lib/scroll";
 
@@ -553,6 +554,7 @@ export function SiteHeader() {
             href={personalInfo.resumeUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => track("CV Download", { placement: "nav" })}
             className="focus-ring flex h-10 items-center justify-center gap-1.5 rounded-chip border border-field-border text-[0.9375rem] font-medium text-ink transition-colors hover:border-accent hover:text-accent"
           >
             <Download className="h-4 w-4" aria-hidden="true" />
@@ -637,6 +639,7 @@ export function SiteHeader() {
           href={personalInfo.resumeUrl}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => track("CV Download", { placement: "nav" })}
           className="focus-ring mt-auto flex min-h-[48px] w-full items-center justify-center gap-2 rounded-chip border border-hairline-strong text-[0.9375rem] font-medium text-ink transition-colors hover:border-accent hover:text-accent"
         >
           <Download className="h-4 w-4" aria-hidden="true" />
