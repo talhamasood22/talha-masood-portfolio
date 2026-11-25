@@ -166,9 +166,8 @@ export const personalInfo: PersonalInfo = {
 
 export const aboutInfo: AboutInfo = {
   narrative: [
-    "Hi, I'm Talha. I'm a full-stack engineer in Stuttgart, and the work I enjoy most is the kind that sits between people and their data: the internal tools that decide whether a scientist finds the failed run in ten seconds or ten minutes.",
+    "The work I enjoy most sits between people and their data: the internal tools that decide whether a scientist finds the failed run in ten seconds or ten minutes. Alongside work I'm finishing an M.Sc. in Computer Science at the University of Stuttgart; my bachelor's in Computer Engineering at FAST-NUCES ended with the gold medal.",
     "I like owning a feature from end to end: the data model, the API, the interface, the tests and the pipeline that ships it. Before moving to Germany I spent two and a half years in Lahore building a real-estate platform for agents in the UAE; since then I've worked on antenna testing at Mercedes-Benz and research tooling at Proxima Fusion.",
-    "Alongside work I'm doing an M.Sc. in Computer Science at the University of Stuttgart, after finishing my bachelor's in Computer Engineering at FAST-NUCES with the gold medal.",
   ],
   pillars: [
     {
