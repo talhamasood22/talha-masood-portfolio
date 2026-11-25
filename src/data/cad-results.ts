@@ -49,6 +49,8 @@ export interface Metric {
   better: "higher" | "lower";
   /** Fixed decimals when the slides print them that way (0.330). */
   decimals?: number;
+  /** A share of 0–1, shown on the page as a percentage. */
+  percent?: boolean;
   /** The finding, in plain words. Every claim must hold for `data`. */
   finding: string;
   data: Table;
@@ -57,8 +59,9 @@ export interface Metric {
 export const METRICS: Metric[] = [
   {
     id: "requirements",
+    percent: true,
     agent: "Reasoning",
-    label: "Understood the request",
+    label: "Request Interpretation",
     definition: "Share of the request's requirements the model picked up correctly.",
     better: "higher",
     finding:
@@ -89,8 +92,9 @@ export const METRICS: Metric[] = [
   },
   {
     id: "compile",
+    percent: true,
     agent: "Reasoning",
-    label: "Code that ran",
+    label: "Successful Code Runs",
     definition: "Share of runs where the generated CAD code ran without errors.",
     better: "higher",
     finding:
@@ -107,7 +111,7 @@ export const METRICS: Metric[] = [
     id: "pointcloud",
     decimals: 3,
     agent: "Generation",
-    label: "Shape error",
+    label: "Shape Error",
     definition: "How far the built part was from the correct one; 0 is a perfect match.",
     better: "lower",
     finding:

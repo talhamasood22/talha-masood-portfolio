@@ -77,6 +77,8 @@ export interface ProjectItem {
   category: string;
   /** Why it exists and what it does, in prose. */
   summary: string;
+  /** What I personally did, shown on its own line under the summary. */
+  role?: string;
   metrics?: string;
   techStack: string[];
   isFeatured: boolean;
@@ -262,7 +264,8 @@ export const projects: ProjectItem[] = [
     category: "Applied LLMs",
     isFeatured: true,
     summary:
-      "A three-person university project: can small, free AI models turn a written description of a part, like \"a box 80 × 50 × 30 mm\", into a working 3D model? We built a three-step pipeline and tested three open models at each step. I built the FastAPI backend that runs the pipeline and the Next.js frontend where you type a request, see the part in 3D and download the files.",
+      "A three-person university project: can small, free AI models turn a sentence like \"a box 80 × 50 × 30 mm\" into a working 3D CAD model?",
+    role: "I built the FastAPI backend and the Next.js frontend: type a request, see the part in 3D, download the files.",
     architecture: [
       "Understand: turns the request into a checklist of features and dimensions.",
       "Build: writes CAD code in Python (CadQuery) and runs it safely to produce 3D files.",

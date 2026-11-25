@@ -73,6 +73,11 @@ export function ProjectsSection() {
               <p className="mt-4 max-w-[62ch] text-base leading-relaxed text-muted text-pretty">
                 {project.summary}
               </p>
+              {project.role && (
+                <p className="mt-3 max-w-[62ch] text-base font-medium leading-relaxed text-ink text-pretty">
+                  {project.role}
+                </p>
+              )}
               {project.id === "multi-agent-cad" && <CadModelChips />}
               <ProjectLinks project={project} />
             </div>

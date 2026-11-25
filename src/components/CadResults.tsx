@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/Badge";
 import {
@@ -29,10 +29,14 @@ const TICKS = [0, 0.25, 0.5, 0.75, 1];
 const BAR = 12; // px, per model
 const GAP = 2; // px surface gap between a part's bars
 
-/** Exactly as the slides print it: 0.8, 0.217, 0.330. Never re-rounded. */
-function fmt(score: Score, decimals?: number) {
+/** As the slides print it (0.217, 0.330), or as a percentage for shares
+ *  (0.217 → 21.7%). Never rounded beyond what the slide gives. */
+function fmt(score: Score, metric: Pick<Metric, "decimals" | "percent">) {
   if (score.count) return `${score.count.correct}/${score.count.total}`;
-  return decimals ? score.value.toFixed(decimals) : String(Number(score.value.toFixed(3)));
+  if (metric.percent) return `${Number((score.value * 100).toFixed(1))}%`;
+  return metric.decimals
+    ? score.value.toFixed(metric.decimals)
+    : String(Number(score.value.toFixed(3)));
 }
 
 const MODEL_NAME = new RegExp(`(${MODELS.map((m) => m.name.replace(/[.]/g, "\\.")).join("|")})`);
@@ -139,12 +143,12 @@ function BarChart({ metric }: { metric: Metric }) {
                           )}
                           style={{ left: `${score.value * 100}%` }}
                         >
-                          {fmt(score, metric.decimals)}
+                          {fmt(score, metric)}
                           {best.length > 1 && <span className="font-normal opacity-75"> tie</span>}
                         </span>
                       )}
                       <span className="pointer-events-none absolute bottom-full left-0 z-10 mb-1 hidden whitespace-nowrap rounded-md border border-hairline bg-panel-raised px-2 py-1 text-[0.75rem] text-ink shadow-sm group-hover:block">
-                        {model.name}, {task.name}: {fmt(score, metric.decimals)}
+                        {model.name}, {task.name}: {fmt(score, metric)}
                       </span>
                     </div>
                   );
@@ -168,7 +172,7 @@ function BarChart({ metric }: { metric: Metric }) {
                 )}
                 style={{ left: `${t * 100}%` }}
               >
-                {t === 0 || t === 1 ? t : t.toFixed(2)}
+                {metric.percent ? `${t * 100}%` : t === 0 || t === 1 ? t : t.toFixed(2)}
               </span>
             ))}
           </div>
@@ -231,7 +235,7 @@ function DataTable({ metric }: { metric: Metric }) {
                       best.includes(m.id) ? "font-semibold text-ink" : "text-muted"
                     )}
                   >
-                    {fmt(row[m.id], metric.decimals)}
+                    {fmt(row[m.id], metric)}
                   </td>
                 ))}
               </tr>
@@ -245,8 +249,8 @@ function DataTable({ metric }: { metric: Metric }) {
 
 /**
  * The evaluation results of the multi-agent CAD project, for a reader who
- * isn't an ML specialist: the takeaway in two sentences, the weak spot in
- * one, then a chart for three plain metrics.
+ * isn't an ML specialist: the takeaway and the weak spot up front, the chart
+ * for three plain metrics one click away.
  */
 export function CadResults() {
   const [metricId, setMetricId] = useState<string>(SHOWN[0].id);
@@ -264,57 +268,70 @@ export function CadResults() {
         <p className="meta">5 test parts, simple to hard · 10 runs per model</p>
       </div>
 
-      <div className="mt-4 max-w-[68ch] space-y-3">
+      <div className="mt-4 max-w-[68ch] space-y-2">
         <p className="text-base leading-relaxed text-ink text-pretty">
-          <Names text="Qwen2.5-Coder-7B-Instruct was the strongest model, both at understanding requests and at building accurate parts. The pipeline works well on simple parts; complex ones, like a chair, stayed hard for all three models." />
+          <span className="font-semibold">
+            <Names text="Qwen2.5-Coder-7B-Instruct won on both understanding and accuracy." />
+          </span>{" "}
+          Simple parts work; complex ones, like a chair, are still out of reach.
         </p>
         <p className="text-small leading-relaxed text-muted text-pretty">
           <span className="font-medium text-ink">Weak spot:</span> the check step compared
-          only sizes and volume, not the actual shape, so it couldn&apos;t tell a good
-          medium or hard part from a bad one. Comparing the geometry itself, for example with
-          a vision model, is the next fix.
+          sizes, not shapes, so it never judged a medium or hard part correctly. Next fix:
+          compare the geometry itself.
         </p>
       </div>
 
-      <div className="mt-8 flex flex-wrap gap-2" role="group" aria-label="Choose a result">
-        {SHOWN.map((m) => (
-          <button
-            key={m.id}
-            type="button"
-            aria-pressed={m.id === metric.id}
-            onClick={() => setMetricId(m.id)}
-            className={cn(
-              "focus-ring min-h-[44px] rounded-chip border px-3 text-small transition-colors",
-              m.id === metric.id
-                ? "border-accent bg-accent text-on-accent"
-                : "border-hairline-strong text-muted hover:border-accent hover:text-ink"
-            )}
-          >
-            {m.label}
-          </button>
-        ))}
-      </div>
+      <details className="group/chart mt-4">
+        <summary className="focus-ring inline-flex min-h-[44px] cursor-pointer list-none items-center gap-1.5 rounded-chip text-small font-medium text-accent [&::-webkit-details-marker]:hidden">
+          <ChevronRight
+            className="h-4 w-4 transition-transform group-open/chart:rotate-90"
+            aria-hidden="true"
+          />
+          <span className="group-open/chart:hidden">Show the results chart</span>
+          <span className="hidden group-open/chart:inline">Hide the results chart</span>
+        </summary>
 
-      <div className="mt-5" aria-live="polite">
-        <p className="max-w-[68ch] text-small text-muted">{metric.definition}</p>
-        <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1" aria-label="Legend">
-          {MODELS.map((m) => (
-            <li key={m.id} className="flex items-center gap-1.5 text-small text-muted">
-              <Marker model={m.id} />
-              {m.name}
-            </li>
+        <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Choose a result">
+          {SHOWN.map((m) => (
+            <button
+              key={m.id}
+              type="button"
+              aria-pressed={m.id === metric.id}
+              onClick={() => setMetricId(m.id)}
+              className={cn(
+                "focus-ring min-h-[44px] rounded-chip border px-3 text-small transition-colors",
+                m.id === metric.id
+                  ? "border-accent bg-accent text-on-accent"
+                  : "border-hairline-strong text-muted hover:border-accent hover:text-ink"
+              )}
+            >
+              {m.label}
+            </button>
           ))}
-        </ul>
+        </div>
 
-        <BarChart metric={metric} />
+        <div className="mt-5" aria-live="polite">
+          <p className="max-w-[68ch] text-small text-muted">{metric.definition}</p>
+          <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1" aria-label="Legend">
+            {MODELS.map((m) => (
+              <li key={m.id} className="flex items-center gap-1.5 text-small text-muted">
+                <Marker model={m.id} />
+                {m.name}
+              </li>
+            ))}
+          </ul>
 
-        <p className="mt-5 max-w-[68ch] text-base text-ink text-pretty">
-          <Names text={metric.finding} />
-        </p>
+          <BarChart metric={metric} />
 
-        {/* The chart is drawn for the eye; screen readers get the same numbers here. */}
-        <DataTable metric={metric} />
-      </div>
+          <p className="mt-5 max-w-[68ch] text-base text-ink text-pretty">
+            <Names text={metric.finding} />
+          </p>
+
+          {/* The chart is drawn for the eye; screen readers get the same numbers here. */}
+          <DataTable metric={metric} />
+        </div>
+      </details>
     </section>
   );
 }
