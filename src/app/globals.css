@@ -28,6 +28,10 @@
   --field-border: #56697a;
   --wash: rgb(96 150 190 / 0.4);
   --fail: #f08a8f;
+  /* Chart series (CAD results): checked for colour-blind separation on --panel. */
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
 
   color-scheme: dark;
 }
@@ -52,6 +56,9 @@
   --field-border: #7b8fa0;
   --wash: rgb(110 160 200 / 0.55);
   --fail: #b4323a;
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
 
   color-scheme: light;
 }

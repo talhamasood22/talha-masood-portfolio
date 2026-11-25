@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { SectionHeader } from "@/components/SectionHeader";
 import { SmoothHashLink } from "@/components/SmoothHashLink";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { OrgLogo } from "@/components/OrgLogo";
 import { experiences, sectionLedes } from "@/data/portfolio";
@@ -214,6 +214,24 @@ export function ExperienceSection() {
                           {exp.link.label}
                           <ArrowDown className="h-3.5 w-3.5" aria-hidden="true" />
                         </SmoothHashLink>
+                      )}
+
+                      {exp.externalLinks && exp.externalLinks.length > 0 && (
+                        <p className="mt-3 flex flex-wrap gap-x-5">
+                          {exp.externalLinks.map((link) => (
+                            <a
+                              key={link.href}
+                              href={link.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="focus-ring inline-flex min-h-[44px] items-center gap-1 rounded-chip text-small font-medium text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:decoration-accent"
+                            >
+                              {link.label}
+                              <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+                              <span className="sr-only">(opens in a new tab)</span>
+                            </a>
+                          ))}
+                        </p>
                       )}
 
                       {exp.techStack.length > 0 && (

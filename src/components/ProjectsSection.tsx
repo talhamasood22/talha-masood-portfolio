@@ -1,6 +1,7 @@
 import React from "react";
 import { ArrowUpRight } from "lucide-react";
 import { SectionHeader } from "@/components/SectionHeader";
+import { CadResults } from "@/components/CadResults";
 import { projects, type ProjectItem } from "@/data/portfolio";
 
 /** "Reasoning agent: works out…" → ["Reasoning agent", "works out…"] */
@@ -123,6 +124,8 @@ export function ProjectsSection() {
                 </div>
               </dl>
             </div>
+
+            {project.id === "multi-agent-cad" && <CadResults />}
           </article>
         ))}
 

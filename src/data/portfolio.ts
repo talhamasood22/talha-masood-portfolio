@@ -65,6 +65,8 @@ export interface ExperienceItem {
   story: string[];
   /** An optional pointer to something on the page you can try. */
   link?: { href: string; label: string };
+  /** Optional links off the site, such as app-store listings. */
+  externalLinks?: { href: string; label: string }[];
   /** A handful of tags, not an inventory. The CV has the full list. */
   techStack: string[];
 }
@@ -238,8 +240,12 @@ export const experiences: ExperienceItem[] = [
     period: "Oct 2021 – Apr 2024",
     employmentType: "Full-time",
     story: [
-      "Two and a half years on Profolio, a mobile and web app for real-estate agents in the UAE, serving more than 100,000 users.",
+      "Two and a half years on Profolio, a mobile and web app for real-estate agents in the UAE, serving more than 100,000 users. I was one of three engineers building the new app, working with the project and product managers and directly with the product designers on design and UX decisions.",
       "I built TruLeads, which sorts leads by how agents have actually interacted with them and lifted agent conversion by 20%, and ProConnect, where about 10,000 agents share listings and coordinate deals over real-time chat. Reworking key mobile flows with the product team brought 15% more app downloads.",
+    ],
+    externalLinks: [
+      { href: "https://apps.apple.com/pk/app/profolio/id1450925753", label: "App Store" },
+      { href: "https://play.google.com/store/apps/details?id=com.bayut.bayutpro&hl=en_US", label: "Google Play" },
     ],
     techStack: ["React Native", "TypeScript", "Laravel", "Elasticsearch", "AWS"],
   },
@@ -256,15 +262,15 @@ export const projects: ProjectItem[] = [
     category: "Applied LLMs",
     isFeatured: true,
     summary:
-      "I wanted to know whether 7–9B open models could turn a plain-language description of a part into CAD code that actually runs. The result is a loop of three agents that writes CadQuery, exports STEP, STL and PNG files, and shows the part in a 3D viewer. Rather than judging the output by eye, I scored each model against ground-truth geometry on five tasks of rising difficulty.",
+      "Can 7–9B open models turn a plain-language description of a part into CAD code that actually runs? In a three-person university project we built a loop of three agents that writes CadQuery, exports STEP, STL and PNG files, and shows the part in a 3D viewer. Then we tested Qwen2.5-Coder-7B-Instruct, Llama-3.1-8B-Instruct and Gemma-2-9B-it in each agent role against hand-built ground-truth models on five parts of rising difficulty.",
     architecture: [
-      "Reasoning agent: works out what the prompt is asking for.",
-      "Generation agent: writes the CadQuery code.",
-      "Feedback agent: checks the result and sends corrections back into the loop.",
+      "Reasoning agent: turns the prompt into a JSON brief of requirements, dimensions and assumptions.",
+      "Generation agent: writes CadQuery from the brief, run in a sandbox with import checks and a timeout.",
+      "Feedback agent: compares the result with the brief and sends repair instructions, up to three attempts.",
     ],
     metrics:
-      "Qwen2.5-Coder-7B, Llama-3.1-8B and Gemma-2-9B, scored by point-cloud Hausdorff distance",
-    techStack: ["Python", "vLLM", "CadQuery", "FastAPI", "Next.js", "Three.js"],
+      "Qwen2.5-Coder-7B-Instruct, Llama-3.1-8B-Instruct and Gemma-2-9B-it, 10 runs per model per part, scored on requirements, compile rate, point-cloud and Hausdorff distance, and verdict accuracy",
+    techStack: ["Python", "vLLM", "CadQuery", "FastAPI", "Pydantic", "Next.js", "Three.js"],
   },
   {
     id: "body-posture-classifier",
