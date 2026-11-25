@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { SectionHeader } from "@/components/SectionHeader";
+import { SmoothHashLink } from "@/components/SmoothHashLink";
 import { ArrowDown } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { OrgLogo } from "@/components/OrgLogo";
@@ -206,13 +207,13 @@ export function ExperienceSection() {
                       </div>
 
                       {exp.link && (
-                        <a
+                        <SmoothHashLink
                           href={exp.link.href}
                           className="focus-ring mt-3 inline-flex min-h-[44px] items-center gap-1.5 rounded-chip text-small font-medium text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:decoration-accent"
                         >
                           {exp.link.label}
                           <ArrowDown className="h-3.5 w-3.5" aria-hidden="true" />
-                        </a>
+                        </SmoothHashLink>
                       )}
 
                       {exp.techStack.length > 0 && (

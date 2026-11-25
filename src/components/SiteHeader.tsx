@@ -6,56 +6,12 @@ import { Download, Menu, X } from "lucide-react";
 import { NAV_ITEMS, personalInfo } from "@/data/portfolio";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
+import { scrollToTop } from "@/lib/scroll";
 
 const DRAWER_ID = "site-navigation";
 const HERO_TITLE_ID = "hero-heading";
 
 const noopSubscribe = () => () => {};
-
-/**
- * An eased scroll back to the top. The browser's own smooth scroll is
- * near-instant over long distances in some engines, so this drives it: the
- * duration grows with the distance (0.6–1.2 s), and any wheel, touch or key
- * input from the visitor hands control straight back to them.
- */
-function scrollToTop() {
-  const start = window.scrollY;
-  if (start <= 0) return;
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    window.scrollTo({ top: 0, behavior: "instant" });
-    return;
-  }
-
-  const duration = Math.min(1200, Math.max(600, start * 0.25));
-  const html = document.documentElement;
-  const previous = html.style.scrollBehavior;
-  // Each step is placed exactly; CSS smooth scrolling would smooth it again.
-  html.style.scrollBehavior = "auto";
-
-  let frame = 0;
-  const begin = performance.now();
-  const stop = () => {
-    cancelAnimationFrame(frame);
-    html.style.scrollBehavior = previous;
-    window.removeEventListener("wheel", stop);
-    window.removeEventListener("touchstart", stop);
-    window.removeEventListener("keydown", stop);
-  };
-
-  const step = (now: number) => {
-    const t = Math.min(1, (now - begin) / duration);
-    // easeInOutCubic: gentle start, quick middle, soft landing.
-    const e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    window.scrollTo({ top: start * (1 - e), behavior: "instant" });
-    if (t < 1) frame = requestAnimationFrame(step);
-    else stop();
-  };
-
-  window.addEventListener("wheel", stop, { passive: true });
-  window.addEventListener("touchstart", stop, { passive: true });
-  window.addEventListener("keydown", stop);
-  frame = requestAnimationFrame(step);
-}
 
 /** Section links point at the home page, so they also work from the 404. */
 const toHome = (href: string) => (href.startsWith("#") ? `/${href}` : href);
