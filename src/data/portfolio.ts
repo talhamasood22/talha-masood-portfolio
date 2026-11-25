@@ -209,7 +209,7 @@ export const experiences: ExperienceItem[] = [
     employmentType: "Working student",
     story: [
       "Proxima's scientists run a lot of computations, and I build the internal tools they use to keep track of them.",
-      "The piece I'm proudest of is the task-run graph. Lineages had grown so dense they stopped being useful, so I designed an aggregation that groups runs by the object they act on, their direction and their task type, without merging lineages that are genuinely independent.",
+      "The piece I'm proudest of is the task-run graph. Lineages had grown so dense they stopped being useful, so I designed an aggregation that groups runs by the object they act on, their direction and their task type, without merging lineages that are genuinely independent. On the worst production graph it cut 1,388 nodes to 52.",
       "I also made every pull request deploy its own staging-like environment in about five minutes, so scientists can try a change before it merges, and built the explorer they use to find the failed, slow or uncommitted runs.",
     ],
     link: { href: "#graph", label: "Try the rebuilt graph" },
@@ -225,7 +225,7 @@ export const experiences: ExperienceItem[] = [
     employmentType: "Working student",
     story: [
       "I joined the over-the-air antenna testing team, which measures how well a car's antennas perform.",
-      "The test benches were the bottleneck, so I wrote a scheduler that runs tests concurrently on whichever benches are free. Throughput went from about 25 tests a day to 44.",
+      "The test benches were the bottleneck, so I wrote a scheduler that runs tests concurrently on whichever benches are free: throughput went from about 25 tests a day to 44 (+70%).",
       "Then I built a dashboard for the results, which cut the time our six test engineers spent on manual review by 80%, and moved the services onto Docker and Jenkins so a deploy became repeatable and took about six minutes.",
     ],
     techStack: ["Node.js", "Vue.js", "Docker", "Jenkins"],
