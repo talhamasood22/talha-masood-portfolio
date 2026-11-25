@@ -26,7 +26,7 @@ const archivo = Archivo({
 const themeScript = `(function(){var theme="dark";try{var stored=localStorage.getItem("theme");var light=window.matchMedia("(prefers-color-scheme: light)").matches;theme=stored==="light"||stored==="dark"?stored:(light?"light":"dark");}catch(e){}document.documentElement.dataset.theme=theme;document.documentElement.style.colorScheme=theme;})();`;
 
 const pageTitle = `${personalInfo.name} | ${personalInfo.title}`;
-const pageDescription = `${personalInfo.name}, ${personalInfo.title.toLowerCase()} in ${personalInfo.location}. ${personalInfo.headline}`;
+const pageDescription = `${personalInfo.name}, based in ${personalInfo.location}. ${personalInfo.headline}`;
 
 export const viewport: Viewport = {
   themeColor: [

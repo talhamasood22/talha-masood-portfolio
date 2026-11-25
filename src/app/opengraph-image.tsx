@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { personalInfo } from "@/data/portfolio";
 
-export const alt = `${personalInfo.name}, ${personalInfo.title.toLowerCase()} in ${personalInfo.location}`;
+export const alt = `${personalInfo.name}: ${personalInfo.title}, based in ${personalInfo.location}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

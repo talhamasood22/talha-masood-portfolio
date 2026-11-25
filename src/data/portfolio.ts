@@ -24,7 +24,6 @@ export interface MacroMetric {
 export interface PersonalInfo {
   name: string;
   title: string;
-  /** One line above the name: where, and what kind of role. */
   /** The hero lede under the name. */
   headline: string;
   location: string;
@@ -126,9 +125,9 @@ export const NAV_ITEMS: NavItem[] = [
 
 export const personalInfo: PersonalInfo = {
   name: "Talha Masood",
-  title: "Software engineer",
+  title: "Full-stack engineer, internal tools",
   headline:
-    "I build the tools scientists and engineers use to make sense of their own work. Right now that's at Proxima Fusion, turning a task graph too dense to read into one people can actually use.",
+    "Full-stack engineer with two and a half years in production web and mobile, and two more building research and test tooling. Right now that's at Proxima Fusion, turning a task-run graph too dense to read into one scientists can actually use.",
   location: "Stuttgart, Germany",
   // Contact details live in .env.local (gitignored) so they never reach the repo.
   // See .env.example.
@@ -136,7 +135,7 @@ export const personalInfo: PersonalInfo = {
   phone: process.env.NEXT_PUBLIC_CONTACT_PHONE ?? "",
   linkedin: "https://linkedin.com/in/talhamasood22",
   github: "https://github.com/talhamasood22",
-  availability: "Working student now, available full-time from October 2027",
+  availability: "Working student while finishing my M.Sc. · full-time from October 2027",
   resumeUrl: "/Talha_Masood_Resume.pdf",
   /** Only used on the link-preview card (opengraph-image), not on the page. */
   metrics: [
