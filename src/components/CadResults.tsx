@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/Badge";
 import {
   METRICS,
   MODELS,
@@ -60,6 +61,25 @@ function Marker({ model, className }: { model: ModelId; className?: string }) {
       className={cn("inline-block h-2.5 w-2.5 shrink-0", SERIES[model].shape, className)}
       style={{ backgroundColor: SERIES[model].color }}
     />
+  );
+}
+
+/** The three models as chips, each with its chart marker so they double as a key. */
+export function CadModelChips() {
+  return (
+    <div className="mt-6">
+      <p className="meta">Models compared</p>
+      <ul className="mt-2 flex flex-wrap gap-2">
+        {MODELS.map((m) => (
+          <li key={m.id}>
+            <Badge className="text-ink">
+              <Marker model={m.id} />
+              {m.name}
+            </Badge>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 

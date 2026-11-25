@@ -1,7 +1,7 @@
 import React from "react";
 import { ArrowUpRight } from "lucide-react";
 import { SectionHeader } from "@/components/SectionHeader";
-import { CadResults } from "@/components/CadResults";
+import { CadModelChips, CadResults } from "@/components/CadResults";
 import { projects, type ProjectItem } from "@/data/portfolio";
 
 /** "Reasoning agent: works out…" → ["Reasoning agent", "works out…"] */
@@ -73,6 +73,7 @@ export function ProjectsSection() {
               <p className="mt-4 max-w-[62ch] text-base leading-relaxed text-muted text-pretty">
                 {project.summary}
               </p>
+              {project.id === "multi-agent-cad" && <CadModelChips />}
               <ProjectLinks project={project} />
             </div>
 
