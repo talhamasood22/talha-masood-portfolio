@@ -615,6 +615,23 @@ button,
   scroll-margin-top: calc(var(--header-h) + 4.5rem);
 }
 
+/* Role, date and place as labelled lines: label column, value column. The
+   role keeps its heading size so it still leads the card. */
+.exp__facts {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.25rem 1rem;
+  font-size: var(--text-small);
+  line-height: var(--text-small--line-height);
+  color: var(--muted);
+}
+
+.exp__facts dt {
+  font-size: var(--text-meta);
+  color: var(--faint);
+}
+
 .exp__card > article {
   transition: border-color 300ms ease;
 }
