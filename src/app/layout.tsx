@@ -23,7 +23,7 @@ const archivo = Archivo({
    stays Archivo. */
 const mono = JetBrains_Mono({
   variable: "--font-jetbrains",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   display: "swap",
   fallback: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
 });

@@ -1,11 +1,11 @@
 import type React from "react";
-import { JetBrains_Mono } from "next/font/google";
 import { ArrowDown, Download } from "lucide-react";
 import { AboutSection } from "@/components/AboutSection";
 import { RelationshipGraphSection } from "@/components/RelationshipGraphSection";
 import { ProjectsSection } from "@/components/ProjectsSection";
 import { ContactSection } from "@/components/ContactSection";
 import { ProfileAvatar } from "@/components/ProfileAvatar";
+import { Availability } from "@/components/Availability";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { TrackedCvLink } from "@/components/TrackedCvLink";
 import { SmoothHashLink } from "@/components/SmoothHashLink";
@@ -19,11 +19,6 @@ import "@/components/terminal/terminal.css";
    design, with a terminal window hero, Experience as git history, and a
    vim-style status line. Education and Skills stay off the page; the
    degrees are told in About and the full stack lives in the CV. */
-
-const mono = JetBrains_Mono({
-  subsets: ["latin", "latin-ext"],
-  display: "swap",
-});
 
 /* Faint source behind the hero: real shapes from the stack, not lorem. */
 const BACKDROP = `export async function listRuns(filter: RunFilter) {
@@ -98,8 +93,6 @@ function Out({ i, children }: { i: number; children: React.ReactNode }) {
 export default function Home() {
   return (
     <div className="skin-terminal">
-      <style>{`body:has(.skin-terminal){--font-term:${mono.style.fontFamily};}`}</style>
-
       <section
         id="hero"
         aria-labelledby="hero-heading"
@@ -149,6 +142,8 @@ export default function Home() {
                   <p className="max-w-[56ch] text-lede text-ink text-pretty">
                     {personalInfo.headline}
                   </p>
+                  {/* Start date and location, as on the classic page. */}
+                  <Availability className="mt-4" />
                 </Out>
 
                 <Cmd i={3} />

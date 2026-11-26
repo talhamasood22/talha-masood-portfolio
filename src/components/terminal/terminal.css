@@ -7,6 +7,12 @@
    - dashed hairlines, numbered sections written as code comments;
    - a terminal window for the hero. */
 
+/* The monospace face is the one the layout already loads for tags and
+   numbers (JetBrains Mono), so the theme adds no second font download. */
+body:has(.skin-terminal) {
+  --font-term: var(--font-jetbrains);
+}
+
 body:has(.skin-terminal) {
   background-image:
     radial-gradient(78% 78% at 50% 0%, var(--wash) 0%, transparent 72%),
