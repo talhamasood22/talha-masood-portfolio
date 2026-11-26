@@ -198,9 +198,7 @@ export function TerminalExperience() {
                     <i />
                     <i />
                   </span>
-                  <span className="term-path">
-                    talha@stuttgart: ~/experience
-                  </span>
+                  <span className="term-path">~/experience</span>
                   <span className="term-tab">
                     {slug(experiences[active].company)}
                   </span>

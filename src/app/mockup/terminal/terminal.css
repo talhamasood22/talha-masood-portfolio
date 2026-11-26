@@ -850,3 +850,42 @@ body:has(.skin-terminal) [aria-label="Sections menu"] li:last-child a::before {
   border-top: 0;
   border-radius: 0 0 var(--radius-panel) var(--radius-panel);
 }
+
+/* ---- Phone fit ----------------------------------------------------------
+   Monospace runs about 15% wider than Archivo, so a few single-line labels
+   that fit before get trimmed here. */
+@media (max-width: 639px) {
+  /* Experience tabs: three company names across one row. Archivo again, as
+     on the live site, rather than cutting the names off. */
+  .texp .exp__rail-company {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    letter-spacing: normal;
+  }
+
+  .texp .exp__rail-list {
+    gap: 0.5rem;
+  }
+
+  /* Contact details: the LinkedIn address is the longest value. */
+  .skin-terminal #contact dl a,
+  .skin-terminal #contact dl dd > span {
+    font-size: 0.875rem;
+  }
+
+  /* Graph toolbar: Before/After and Reset on the first row, the counts on
+     their own row below, instead of Reset wrapping alone. */
+  .skin-terminal .rg-toolbar {
+    gap: 0.5rem 0.75rem;
+  }
+
+  .skin-terminal .rg-reset {
+    order: 2;
+  }
+
+  .skin-terminal .rg-stats {
+    order: 3;
+    flex-basis: 100%;
+    padding-left: 0.25rem;
+  }
+}
