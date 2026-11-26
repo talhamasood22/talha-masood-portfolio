@@ -138,7 +138,7 @@ function BarChart({ metric }: { metric: Metric }) {
                       {labelled && (
                         <span
                           className={cn(
-                            "absolute top-1/2 -translate-y-1/2 whitespace-nowrap text-[0.75rem] font-semibold leading-none tabular-nums",
+                            "absolute top-1/2 -translate-y-1/2 whitespace-nowrap font-mono text-[0.75rem] font-semibold leading-none tabular-nums",
                             inside ? "-translate-x-full pr-1.5 text-[#0a1015]" : "pl-1.5 text-ink"
                           )}
                           style={{ left: `${score.value * 100}%` }}

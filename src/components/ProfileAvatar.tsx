@@ -1,11 +1,10 @@
 import React from "react";
 import Image from "next/image";
-import { Availability } from "@/components/Availability";
 import { personalInfo } from "@/data/portfolio";
 
 /**
- * Portrait for the hero, with the one fact a recruiter checks first under it:
- * whether he is available, and where.
+ * Portrait for the hero. Availability sits under the headline instead, so it
+ * is on the first screen on phones too.
  *
  * To use a different photo, replace `public/images/profile.jpg` with a square
  * or portrait image (1200px or larger). The monogram behind the photo is only
@@ -39,7 +38,6 @@ export function ProfileAvatar() {
         />
       </div>
 
-      <Availability as="figcaption" className="mt-4" />
     </figure>
   );
 }

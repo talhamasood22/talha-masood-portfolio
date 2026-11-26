@@ -173,24 +173,33 @@ export function ExperienceSection() {
                     className="exp__card"
                   >
                     <article className="rounded-panel border border-hairline bg-panel p-5 sm:p-6">
-                      <div className="exp__card-head flex flex-wrap items-center justify-between gap-x-6 gap-y-1">
+                      <div className="exp__card-head mb-4">
                         <p className="flex items-center gap-3 text-lg font-semibold leading-snug text-ink">
                           {exp.logo && <OrgLogo logo={exp.logo} size={36} />}
                           {exp.company}
                         </p>
-                        <p className="meta">{exp.period}</p>
                       </div>
-                      <p className="meta">
-                        {exp.location}
-                        {exp.employmentType && `, ${exp.employmentType.toLowerCase()}`}
-                      </p>
 
-                      <h3 className="mt-4 text-h3 font-semibold text-ink text-balance">
-                        {exp.role}
-                      </h3>
+                      {/* The facts a recruiter scans for, each on its own
+                          labelled line: what the job was, when, and where. */}
+                      <dl className="exp__facts">
+                        <dt>Role</dt>
+                        <dd>
+                          <h3 className="text-h3 font-semibold text-ink text-balance">
+                            {exp.role}
+                          </h3>
+                        </dd>
+                        <dt>Date</dt>
+                        <dd>{exp.period}</dd>
+                        <dt>Where</dt>
+                        <dd>
+                          {exp.location}
+                          {exp.employmentType && ` · ${exp.employmentType.toLowerCase()}`}
+                        </dd>
+                      </dl>
                       {/* The role as a short story: the first paragraph sets
                           the scene, the rest is what he did there. */}
-                      <div className="exp__measure mt-3 max-w-[66ch] space-y-3">
+                      <div className="exp__measure mt-4 max-w-[66ch] space-y-3">
                         {exp.story.map((paragraph, p) => (
                           <p
                             key={paragraph}
