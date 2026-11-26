@@ -769,3 +769,83 @@ body:has(.skin-terminal) {
 .skin-terminal .rg-task {
   border-radius: 0.25rem;
 }
+
+/* Keyboard hint: desktop only, quiet. */
+.term-status__keys {
+  display: none;
+  color: var(--faint);
+}
+
+.term-status__keys kbd {
+  font-family: inherit;
+  color: var(--muted);
+}
+
+@media (min-width: 1024px) {
+  .term-status__keys {
+    display: inline;
+  }
+}
+
+/* ---- Phone menu as the same file tree as the desktop nav ---- */
+
+body:has(.skin-terminal) [aria-label="Sections menu"]::before {
+  content: "~/portfolio";
+  display: block;
+  padding: 0.75rem 0 0.25rem;
+  font-family: var(--font-term), ui-monospace, monospace;
+  font-size: var(--text-meta);
+  color: var(--faint);
+}
+
+body:has(.skin-terminal) [aria-label="Sections menu"] li {
+  border-bottom: 0;
+}
+
+body:has(.skin-terminal) [aria-label="Sections menu"] a {
+  text-transform: lowercase;
+  font-size: 1.0625rem;
+}
+
+body:has(.skin-terminal) [aria-label="Sections menu"] li a::before {
+  content: "├─ ";
+  white-space: pre;
+  color: var(--hairline-strong);
+}
+
+body:has(.skin-terminal) [aria-label="Sections menu"] li:last-child a::before {
+  content: "└─ ";
+}
+
+/* ---- Profile photo as an image-viewer window ---- */
+
+.skin-terminal #hero figure::before {
+  content: "profile.jpg";
+  display: block;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--hairline-strong);
+  border-bottom-style: dashed;
+  border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+  background-color: var(--term-chrome);
+  background-image:
+    radial-gradient(circle, var(--accent) 0 3.5px, transparent 4px),
+    radial-gradient(circle, transparent 0 2.5px, var(--hairline-strong) 3px 3.75px, transparent 4.25px),
+    radial-gradient(circle, transparent 0 2.5px, var(--hairline-strong) 3px 3.75px, transparent 4.25px);
+  background-size: 10px 10px;
+  background-repeat: no-repeat;
+  background-position:
+    0.9rem center,
+    calc(0.9rem + 16px) center,
+    calc(0.9rem + 32px) center;
+  font-family: var(--font-term), ui-monospace, monospace;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--faint);
+  text-align: center;
+}
+
+.skin-terminal #hero figure > div.rounded-panel {
+  border-color: var(--hairline-strong);
+  border-top: 0;
+  border-radius: 0 0 var(--radius-panel) var(--radius-panel);
+}

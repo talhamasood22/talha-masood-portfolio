@@ -11,6 +11,7 @@ import { ButtonLink } from "@/components/ui/ButtonLink";
 import { TrackedCvLink } from "@/components/TrackedCvLink";
 import { SmoothHashLink } from "@/components/SmoothHashLink";
 import { personalInfo } from "@/data/portfolio";
+import { MockupNav } from "./MockupNav";
 import { StatusBar } from "./StatusBar";
 import { TerminalExperience } from "./TerminalExperience";
 import "./terminal.css";
@@ -204,6 +205,7 @@ export default function TerminalMockup() {
       <ProjectsSection />
       <ContactSection />
       <StatusBar />
+      <MockupNav />
     </div>
   );
 }
