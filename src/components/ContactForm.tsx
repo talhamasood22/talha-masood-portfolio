@@ -7,7 +7,7 @@ import { ButtonLink } from "@/components/ui/ButtonLink";
 import { formSubjects, personalInfo } from "@/data/portfolio";
 
 const EMPTY_FORM = { name: "", company: "", subject: "", message: "" };
-const MESSAGE_MAX = 800;
+const MESSAGE_MAX = 2000;
 const SUBJECTS_ID = "contact-subjects";
 
 const fieldStyles =
