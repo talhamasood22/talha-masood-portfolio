@@ -219,7 +219,7 @@ export const experiences: ExperienceItem[] = [
     story: [
       "I work across the whole stack: frontend, backend and DevOps, and I both use and build agentic workflows. Most of it goes into the internal tools Proxima's scientists use to run and keep track of their computations.",
       "The piece I'm proudest of is the task-run graph. Lineages had grown so dense they stopped being useful, so I designed an aggregation that groups runs by the object they act on, their direction and their task type, without merging lineages that are genuinely independent. On the worst production graph it cut 1,388 nodes to 52.",
-      "I also made every pull request deploy its own staging-like environment in about five minutes. More than 40 scientists and the AI agents across the company use them: whoever opens the pull request shares the link with the people who asked for the change, so they can try it before it merges. And I built the explorer they use to find the failed, slow or uncommitted runs.",
+      "I also made every pull request deploy its own staging-like environment in about five minutes. More than 40 scientists and the AI agents across the company use them: whoever opens the pull request shares the link with the people who asked for the change. And I built the explorer they use to find the failed, slow or uncommitted runs.",
     ],
     link: { href: "#graph", label: "Try the rebuilt graph" },
     techStack: ["TypeScript", "React Flow", "FastAPI", "Terraform", "Cloud Run"],
