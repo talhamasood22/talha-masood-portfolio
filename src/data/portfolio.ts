@@ -131,7 +131,7 @@ export const NAV_ITEMS: NavItem[] = [
 
 export const personalInfo: PersonalInfo = {
   name: "Talha Masood",
-  title: "Full-stack engineer, internal tools",
+  title: "Full-stack engineer",
   headline:
     "Over four years building software: two and a half full-time on production web and mobile apps, then two part-time on research and test tooling alongside my M.Sc. Right now I'm a full-stack engineer at Proxima Fusion, working across frontend, backend and DevOps, and both using and building agentic workflows.",
   location: "Stuttgart, Germany",
