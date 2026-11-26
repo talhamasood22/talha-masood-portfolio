@@ -307,8 +307,14 @@ function registerTier2(engine, workspaceDir = process.cwd()) {
       });
 
       engine.test('T2.10.2: Empty Form Submission Handling', () => {
-        const hasRequired = /required/i.test(doc.raw);
-        assert.ok(hasRequired, 'Contact form inputs must include required attribute');
+        // Every field is optional: the draft action has to work from a blank form.
+        const hasDraftAction = /Open email draft/i.test(doc.raw);
+        const hasRequiredField = /<(?:input|textarea)\b[^>]*\brequired\b/i.test(doc.raw);
+        assert.ok(hasDraftAction, 'Contact form must offer the email-draft action');
+        assert.ok(
+          !hasRequiredField,
+          'Contact fields must stay optional so an empty form still opens a draft'
+        );
       });
 
       engine.test('T2.10.3: Telephone URI Formatting', () => {

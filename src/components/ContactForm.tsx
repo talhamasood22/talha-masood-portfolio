@@ -32,18 +32,26 @@ export function ContactForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const body = [
-      `Name: ${formData.name}`,
+    // Every field is optional, so leave out the parts that were left blank
+    // rather than sending a draft with empty labels in it.
+    const heading = [
+      formData.name ? `Name: ${formData.name}` : null,
       formData.company ? `Organization: ${formData.company}` : null,
-      "",
-      formData.message,
     ]
       .filter((line) => line !== null)
       .join("\r\n");
 
-    const mailto = `mailto:${personalInfo.email}?subject=${encodeURIComponent(
-      formData.subject
-    )}&body=${encodeURIComponent(body)}`;
+    const body = [heading, formData.message]
+      .filter((part) => part.trim() !== "")
+      .join("\r\n\r\n");
+
+    const subject = formData.subject
+      ? `subject=${encodeURIComponent(formData.subject)}&`
+      : "";
+
+    const mailto = `mailto:${personalInfo.email}?${subject}body=${encodeURIComponent(
+      body
+    )}`;
 
     setDraftHref(mailto);
     setAnnouncement("Email draft prepared.");
@@ -105,13 +113,12 @@ export function ContactForm() {
                 htmlFor="contact-name"
                 className="mb-1.5 block text-small font-medium text-ink"
               >
-                Full name *
+                Full name
               </label>
               <input
                 id="contact-name"
                 name="name"
                 type="text"
-                required
                 autoComplete="name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -144,13 +151,12 @@ export function ContactForm() {
               htmlFor="contact-subject"
               className="mb-1.5 block text-small font-medium text-ink"
             >
-              Subject *
+                              Subject
             </label>
             <input
               id="contact-subject"
               name="subject"
               type="text"
-              required
               autoComplete="off"
               list={SUBJECTS_ID}
               value={formData.subject}
@@ -170,12 +176,11 @@ export function ContactForm() {
               htmlFor="contact-message"
               className="mb-1.5 block text-small font-medium text-ink"
             >
-              Message *
+                              Message
             </label>
             <textarea
               id="contact-message"
               name="message"
-              required
               rows={5}
               maxLength={MESSAGE_MAX}
               autoComplete="off"
