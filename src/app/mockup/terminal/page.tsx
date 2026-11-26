@@ -25,7 +25,6 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Terminal theme mockup",
   robots: { index: false, follow: false },
 };
 
