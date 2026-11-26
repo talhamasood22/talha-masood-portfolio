@@ -381,7 +381,7 @@ export const skills: SkillCategory[] = [
     category: "Languages",
     summary:
       "TypeScript most days, Python wherever there's data or a model involved.",
-    skills: ["TypeScript", "JavaScript", "Python", "SQL", "PHP"],
+    skills: ["TypeScript", "Python", "PHP"],
   },
   {
     id: "frontend-mobile",
@@ -394,11 +394,8 @@ export const skills: SkillCategory[] = [
       "Next.js",
       "Vue.js",
       "React Native",
-      "Expo",
       "TanStack Query",
       "Redux",
-      "Pinia",
-      "Three.js",
     ],
   },
   {
@@ -410,11 +407,9 @@ export const skills: SkillCategory[] = [
       "FastAPI",
       "Node.js",
       "SQLAlchemy",
-      "Pydantic",
       "Laravel",
       "MySQL",
       "Elasticsearch",
-      "Firebase",
     ],
   },
   {
@@ -429,40 +424,28 @@ export const skills: SkillCategory[] = [
       "Google Cloud Run",
       "AWS (S3, EC2, RDS, DMS)",
       "Jenkins",
-      "CircleCI",
       "Apptainer",
+      "Linux",
     ],
   },
   {
     id: "ai-llm-ml",
-    category: "LLMs and ML",
+    category: "LLMs",
     summary:
-      "Agent pipelines scored against ground truth, plus a few computer-vision and ML projects.",
+      "Agent pipelines on open source models, scored against ground truth rather than eyeballed.",
     skills: [
       "Agent pipelines",
       "vLLM",
-      "Prompt engineering",
-      "CadQuery",
-      "scikit-learn",
-      "MediaPipe",
-      "TensorFlow/Keras",
     ],
   },
   {
     id: "testing-tools",
-    category: "Testing and tools",
+    category: "Testing",
     summary:
-      "Vitest and Testing Library on the frontend, Postman for APIs, and small stacked pull requests with Graphite.",
+      "Unit and component tests on the frontend, so a change is safe to ship.",
     skills: [
       "Vitest",
       "React Testing Library",
-      "Jest",
-      "Git",
-      "GitHub",
-      "Graphite",
-      "Bitbucket",
-      "Postman",
-      "Linux",
     ],
   },
 ];
