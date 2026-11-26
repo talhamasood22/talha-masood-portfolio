@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { formSubjects, personalInfo } from "@/data/portfolio";
 
-const EMPTY_FORM = { name: "", company: "", email: "", subject: "", message: "" };
+const EMPTY_FORM = { name: "", company: "", subject: "", message: "" };
 const MESSAGE_MAX = 800;
 const SUBJECTS_ID = "contact-subjects";
 
@@ -35,7 +35,6 @@ export function ContactForm() {
     const body = [
       `Name: ${formData.name}`,
       formData.company ? `Organization: ${formData.company}` : null,
-      `Email: ${formData.email}`,
       "",
       formData.message,
     ]
@@ -140,53 +139,30 @@ export function ContactForm() {
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label
-                htmlFor="contact-email"
-                className="mb-1.5 block text-small font-medium text-ink"
-              >
-                Email address *
-              </label>
-              <input
-                id="contact-email"
-                name="email"
-                type="email"
-                required
-                autoComplete="email"
-                inputMode="email"
-                spellCheck={false}
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                placeholder="jane@company.com"
-                className={fieldStyles}
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="contact-subject"
-                className="mb-1.5 block text-small font-medium text-ink"
-              >
-                Subject *
-              </label>
-              <input
-                id="contact-subject"
-                name="subject"
-                type="text"
-                required
-                autoComplete="off"
-                list={SUBJECTS_ID}
-                value={formData.subject}
-                onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                placeholder="Role opportunity…"
-                className={fieldStyles}
-              />
-              <datalist id={SUBJECTS_ID}>
-                {formSubjects.map((subject) => (
-                  <option key={subject} value={subject} />
-                ))}
-              </datalist>
-            </div>
+          <div>
+            <label
+              htmlFor="contact-subject"
+              className="mb-1.5 block text-small font-medium text-ink"
+            >
+              Subject *
+            </label>
+            <input
+              id="contact-subject"
+              name="subject"
+              type="text"
+              required
+              autoComplete="off"
+              list={SUBJECTS_ID}
+              value={formData.subject}
+              onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+              placeholder="Role opportunity…"
+              className={fieldStyles}
+            />
+            <datalist id={SUBJECTS_ID}>
+              {formSubjects.map((subject) => (
+                <option key={subject} value={subject} />
+              ))}
+            </datalist>
           </div>
 
           <div>
