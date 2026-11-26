@@ -78,8 +78,11 @@
   --color-status: var(--status);
   --color-field-border: var(--field-border);
 
-  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-serif), Palatino, Georgia, serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  /* Interface text (navigation, buttons, form fields, small supporting
+     text, the graph) is set in Archivo; reading text stays in Pagella X. */
+  --font-ui: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
 }
 
 /* ---- Type scale ---------------------------------------------------------
@@ -130,7 +133,7 @@ body {
   background-color: var(--page);
   color: var(--ink);
   font-family: var(--font-sans);
-  font-size: 1.0625rem;
+  font-size: 1.125rem;
   line-height: 1.65;
   min-height: 100dvh;
   /* `clip` rather than `hidden`: hidden makes the body a scroll container,
@@ -185,15 +188,13 @@ button,
    the docked masthead and the headline figures are set wide; section
    headings slightly wide; everything you read is set at normal width. */
 .font-display {
-  font-stretch: 118%;
-  font-weight: 650;
-  letter-spacing: -0.03em;
+  font-weight: 700;
+  letter-spacing: -0.015em;
 }
 
 .font-heading {
-  font-stretch: 108%;
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  letter-spacing: -0.005em;
 }
 
 /* Small supporting text: dates, places, categories. Sentence case, untracked,
@@ -203,6 +204,26 @@ button,
   line-height: var(--text-meta--line-height);
   color: var(--faint);
   font-variant-numeric: tabular-nums;
+}
+
+/* Interface text in Archivo. The name and headings set inside these
+   (masthead, drawer, footer) stay in Pagella X. */
+.meta,
+button,
+input,
+textarea,
+select,
+label,
+.nav-bar,
+.nav-panel,
+.site-drawer,
+footer {
+  font-family: var(--font-ui);
+}
+
+.font-display,
+.font-heading {
+  font-family: var(--font-sans);
 }
 
 /* ---- Focus ------------------------------------------------------------ */
@@ -819,6 +840,12 @@ button,
 /* ---- Relationship graph demo ---------------------------------------------
    A mock-data rebuild of the lineage graph. Data objects are small pills,
    tasks are cards; grouped task cards carry the run cycler and status bar. */
+
+/* The graph is interface: Archivo at the original body size. */
+.rg {
+  font-family: var(--font-ui);
+  font-size: 1.0625rem;
+}
 
 .rg-toolbar {
   display: flex;

@@ -594,7 +594,7 @@ export function SiteHeader() {
         aria-label="Site navigation"
         inert={!isMenuOpen}
         className={cn(
-          "fixed inset-y-0 right-0 z-50 flex w-full max-w-xs flex-col overflow-y-auto overscroll-contain border-l border-hairline bg-page px-6 pb-6 transition-transform duration-300 ease-out lg:hidden",
+          "site-drawer fixed inset-y-0 right-0 z-50 flex w-full max-w-xs flex-col overflow-y-auto overscroll-contain border-l border-hairline bg-page px-6 pb-6 transition-transform duration-300 ease-out lg:hidden",
           isMenuOpen ? "translate-x-0" : "translate-x-full"
         )}
       >
