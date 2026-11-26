@@ -267,11 +267,11 @@ export const projects: ProjectItem[] = [
   {
     id: "multi-agent-cad",
     codePrivate: true,
-    title: "Can small open models write CAD?",
+    title: "Can small open source models write CAD?",
     category: "Applied LLMs",
     isFeatured: true,
     summary:
-      "A three-person university project: can small, free AI models turn a sentence like \"a box 80 × 50 × 30 mm\" into a working 3D CAD model?",
+      "A three-person university project: can small open source models turn a sentence like \"a box 80 × 50 × 30 mm\" into a working 3D CAD model?",
     role: "I built the FastAPI backend and the Next.js frontend: type a request, see the part in 3D, download the files.",
     architecture: [
       "Understand: turns the request into a checklist of features and dimensions.",
