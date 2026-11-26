@@ -99,6 +99,11 @@
   --text-h3--line-height: 1.3;
   --text-lede: clamp(1.125rem, 1rem + 0.45vw, 1.3125rem);
   --text-lede--line-height: 1.55;
+  /* Body size. Pagella X reads small, so the page runs at 18px; text-base
+     has to match it or a lead paragraph ends up smaller than the text
+     under it. */
+  --text-base: 1.125rem;
+  --text-base--line-height: 1.65;
   --text-small: 0.9375rem;
   --text-small--line-height: 1.6;
   --text-meta: 0.8125rem;
@@ -133,7 +138,7 @@ body {
   background-color: var(--page);
   color: var(--ink);
   font-family: var(--font-sans);
-  font-size: 1.125rem;
+  font-size: var(--text-base);
   line-height: 1.65;
   min-height: 100dvh;
   /* `clip` rather than `hidden`: hidden makes the body a scroll container,
