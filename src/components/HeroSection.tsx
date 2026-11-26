@@ -1,6 +1,7 @@
 import React from "react";
 import { ArrowDown, Download } from "lucide-react";
 import { ProfileAvatar } from "@/components/ProfileAvatar";
+import { Availability } from "@/components/Availability";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { TrackedCvLink } from "@/components/TrackedCvLink";
 import { SmoothHashLink } from "@/components/SmoothHashLink";
@@ -46,6 +47,9 @@ export function HeroSection() {
             <p className="max-w-[52ch] text-lede text-ink text-pretty">
               {personalInfo.headline}
             </p>
+            {/* Start date and location, on the first screen on every device:
+                what a recruiter screens on before anything else. */}
+            <Availability className="mt-4" />
             <SmoothHashLink
               href="#graph"
               className="focus-ring mt-3 inline-flex min-h-[44px] items-center gap-1.5 rounded-chip text-small font-medium text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:decoration-accent"

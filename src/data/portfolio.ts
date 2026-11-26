@@ -32,6 +32,9 @@ export interface PersonalInfo {
   linkedin: string;
   github: string;
   availability: string;
+  /** Where he is based and where he would work: the second thing a
+   *  recruiter screens on after the start date. */
+  workLocation: string;
   resumeUrl: string;
   metrics: MacroMetric[];
 }
@@ -142,6 +145,7 @@ export const personalInfo: PersonalInfo = {
   linkedin: "https://linkedin.com/in/talhamasood22",
   github: "https://github.com/talhamasood22",
   availability: "Working student while finishing my M.Sc. · full-time from October 2027",
+  workLocation: "Based in Stuttgart · open to roles across Germany and remote",
   resumeUrl: "/Talha_Masood_Resume.pdf",
   /** Only used on the link-preview card (opengraph-image), not on the page. */
   metrics: [
