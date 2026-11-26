@@ -32,6 +32,16 @@ npm run lint       # ESLint
 npm run test:e2e   # End-to-end static checks
 ```
 
+### Deployment
+
+The site deploys on [Vercel](https://vercel.com) from this repository: every push to `main` ships to production, and other branches get preview deployments. The custom domain `talhamasood.dev` is attached under **Settings → Domains** in the Vercel project, with its DNS pointing at Vercel.
+
+To check a production build locally before pushing:
+
+```bash
+npm run build && npm run start
+```
+
 ### Environment Variables
 
 Set these in `.env.local` for local development or in Vercel (**Settings → Environment Variables**) for production (`NEXT_PUBLIC_*` values are baked in at build time):

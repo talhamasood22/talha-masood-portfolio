@@ -301,9 +301,13 @@ function registerTier2(engine, workspaceDir = process.cwd()) {
 
     // ─── Feature 10: Contact & Social Links (Boundaries) ──────────────────────
     engine.feature('F10', 'Contact Boundaries (Validation, Tel URI, Tabnabbing, Target Size)', () => {
-      engine.test('T2.10.1: Malformed Email Form Input Handling', () => {
+      engine.test('T2.10.1: Reply Address Comes From the Mail App', () => {
+        // The form only writes a mailto: draft, so the visitor's own mail app
+        // supplies their address; there is no email field to validate.
         const hasEmailInput = /type=["']email["']/i.test(doc.raw);
-        assert.ok(hasEmailInput, 'Email field must specify type="email" for browser-level validation');
+        const hasMailtoDraft = /mailto:\$\{/.test(doc.raw);
+        assert.ok(!hasEmailInput, 'Contact form must not ask for an email address the mail app already has');
+        assert.ok(hasMailtoDraft, 'Contact form must build a mailto: draft');
       });
 
       engine.test('T2.10.2: Empty Form Submission Handling', () => {
