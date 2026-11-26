@@ -173,7 +173,7 @@ export const personalInfo: PersonalInfo = {
 export const aboutInfo: AboutInfo = {
   narrative: [
     "The work I enjoy most sits between people and their data: the internal tools that decide whether a scientist finds the failed run in ten seconds or ten minutes. Alongside work I'm finishing an M.Sc. in Computer Science at the University of Stuttgart; my bachelor's in Computer Engineering at FAST-NUCES ended with the gold medal.",
-    "I like owning a feature from end to end: the data model, the API, the interface, the tests and the pipeline that ships it. Before moving to Germany I spent two and a half years in Lahore building a real-estate platform for agents in the UAE; since then I've worked on antenna testing at Mercedes-Benz and research tooling at Proxima Fusion.",
+    "I like owning a feature from end to end: the data model, the API, the interface, the tests and the pipeline that ships it. Before moving to Germany I spent two and a half years in Lahore building a real-estate platform for agents in the UAE; since then I've worked on antenna testing at Mercedes-Benz and full-stack engineering at Proxima Fusion.",
   ],
   pillars: [
     {
@@ -213,7 +213,7 @@ export const experiences: ExperienceItem[] = [
     period: "May 2026 – Present",
     employmentType: "Working student",
     story: [
-      "Proxima's scientists run a lot of computations, and I build the internal tools they use to keep track of them.",
+      "I work across the whole stack: frontend, backend and DevOps, and I both use and build agentic workflows. Most of it goes into the internal tools Proxima's scientists use to run and keep track of their computations.",
       "The piece I'm proudest of is the task-run graph. Lineages had grown so dense they stopped being useful, so I designed an aggregation that groups runs by the object they act on, their direction and their task type, without merging lineages that are genuinely independent. On the worst production graph it cut 1,388 nodes to 52.",
       "I also made every pull request deploy its own staging-like environment in about five minutes. More than 40 scientists and the AI agents across the company use them: whoever opens the pull request shares the link with the people who asked for the change, so they can try it before it merges. And I built the explorer they use to find the failed, slow or uncommitted runs.",
     ],
