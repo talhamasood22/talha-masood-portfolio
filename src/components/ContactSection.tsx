@@ -4,7 +4,6 @@ import { Card } from "@/components/ui/Card";
 import { SectionHeader } from "@/components/SectionHeader";
 import { ContactForm } from "@/components/ContactForm";
 import { CopyEmailButton } from "@/components/CopyEmailButton";
-import { Availability } from "@/components/Availability";
 import { GitHubIcon, LinkedInIcon } from "@/components/icons";
 import { contactForm, personalInfo, sectionLedes } from "@/data/portfolio";
 
@@ -112,8 +111,6 @@ export function ContactSection() {
                 </div>
               ))}
             </dl>
-
-            <Availability className="mt-5 max-w-[40ch]" />
           </div>
 
           {/* Message composer */}

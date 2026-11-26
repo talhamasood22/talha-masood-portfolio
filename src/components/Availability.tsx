@@ -9,7 +9,7 @@ interface AvailabilityProps {
 
 /**
  * Start date, then where he is based and open to work, with a status dot.
- * Shown in the hero (under the headline) and in contact.
+ * Shown in the hero, under the headline.
  */
 export function Availability({ as: Tag = "p", className }: AvailabilityProps) {
   return (
