@@ -9,16 +9,16 @@ import { THEME_CHROME } from "@/lib/theme";
 import { personalInfo } from "@/data/portfolio";
 import { Analytics } from "@vercel/analytics/next";
 
-/* Mockup: TeX Gyre Pagella X (Michael Sharpe's extension of TeX Gyre
-   Pagella, from the newpx package on CTAN; GUST Font License), a Palatino
-   design, self-hosted. It ships in regular and bold only. */
+/* TeX Gyre Pagella X (Michael Sharpe's extension of TeX Gyre Pagella, from
+   the newpx package on CTAN; GUST Font License), a Palatino design,
+   self-hosted. Regular and bold only, and no italics since the site sets
+   none. The files are subset to Latin plus punctuation, arrows and math
+   symbols, and compressed to WOFF2. */
 const serif = localFont({
   variable: "--font-serif",
   src: [
-    { path: "./fonts/TeXGyrePagellaX-Regular.otf", weight: "400", style: "normal" },
-    { path: "./fonts/TeXGyrePagellaX-Italic.otf", weight: "400", style: "italic" },
-    { path: "./fonts/TeXGyrePagellaX-Bold.otf", weight: "700", style: "normal" },
-    { path: "./fonts/TeXGyrePagellaX-BoldItalic.otf", weight: "700", style: "italic" },
+    { path: "./fonts/TeXGyrePagellaX-Regular.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/TeXGyrePagellaX-Bold.woff2", weight: "700", style: "normal" },
   ],
   display: "swap",
   fallback: ["Palatino", "Palatino Linotype", "Book Antiqua", "Georgia", "serif"],
