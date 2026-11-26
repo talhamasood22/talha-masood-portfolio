@@ -20,12 +20,11 @@ const toHome = (href: string) => (href.startsWith("#") ? `/${href}` : href);
 /**
  * The site masthead.
  *
- * On small screens, a sticky bar with the name on the left and the menu on
- * the right, the name visible from the first screen. On large screens the
- * name rises into a dock once the hero's own title has scrolled away (see
- * `.site-dock` in globals.css). Docking is a single boolean from an
- * IntersectionObserver, so nothing is measured or positioned on scroll
- * frames.
+ * A sticky bar with the name on the left and the sections on the right. The
+ * name is hidden while the hero's own title is on screen, and rises into the
+ * bar once that title has scrolled up underneath it (see `.site-header` in
+ * globals.css). Docking is a single boolean from an IntersectionObserver, so
+ * nothing is measured or positioned on scroll frames.
  */
 export function SiteHeader() {
   const headerRef = useRef<HTMLElement>(null);
@@ -434,8 +433,8 @@ export function SiteHeader() {
 
   return (
     <>
-      {/* Small screens: a floating bar inset from the edges, with the name
-          always in it. */}
+      {/* Small screens: a floating bar inset from the edges. The name rises
+          into it once the hero title has scrolled away. */}
       <header
         ref={headerRef}
         className="site-header pointer-events-none sticky top-0 z-40 px-3 pt-3 lg:hidden"
@@ -443,12 +442,17 @@ export function SiteHeader() {
         data-scrolled={scrolled || isMenuOpen}
       >
         <div className="nav-bar pointer-events-auto mx-auto flex h-14 max-w-4xl items-center justify-between gap-3 rounded-panel pl-4 pr-1.5">
+          {/* The docked name. Hidden from assistive tech while the hero's
+              <h1> is the visible name, so it is never announced twice. */}
           <Link
             href="/"
             onClick={toTop}
             aria-label={`${personalInfo.name}, back to top`}
+            aria-hidden={!docked}
+            tabIndex={docked ? undefined : -1}
             className="focus-ring -mx-1 flex min-h-11 min-w-0 items-center rounded-chip px-1 font-display text-[1.1875rem] leading-none text-ink"
           >
+            {/* The clip window the name rises through (see globals.css). */}
             <span className="site-header__name min-w-0">
               <span className="truncate">{personalInfo.name}</span>
             </span>

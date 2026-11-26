@@ -278,6 +278,17 @@ h4,
   box-shadow: 0 16px 40px -18px rgb(8 30 48 / 0.7);
 }
 
+/* Until the name docks into it, the bar would be an empty pill holding only
+   the theme and menu buttons. Drop its surface so just the buttons float
+   over the hero; the pill gathers around the name when it arrives. */
+.site-header[data-docked="false"] .nav-bar {
+  border-color: transparent;
+  background-color: transparent;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
 /* A band in the page colour behind the floating bars, full width at the top
    of the screen. Without it, text scrolling under the bar shows above and
    beside the pill and reads as content colliding with it. It fades out at its
@@ -520,10 +531,7 @@ h4,
     opacity 320ms ease;
 }
 
-[data-docked="true"] .site-header__name > span,
-.site-header .site-header__name > span {
-  /* Small screens show the name in the bar from the first screen; only the
-     large-screen dock waits for the hero title to scroll away. */
+[data-docked="true"] .site-header__name > span {
   transform: none;
   opacity: 1;
 }
