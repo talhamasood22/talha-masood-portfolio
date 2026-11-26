@@ -78,7 +78,7 @@
   --color-status: var(--status);
   --color-field-border: var(--field-border);
 
-  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
 
@@ -185,14 +185,12 @@ button,
    the docked masthead and the headline figures are set wide; section
    headings slightly wide; everything you read is set at normal width. */
 .font-display {
-  font-stretch: 118%;
-  font-weight: 650;
+  font-weight: 700;
   letter-spacing: -0.03em;
 }
 
 .font-heading {
-  font-stretch: 108%;
-  font-weight: 600;
+  font-weight: 650;
   letter-spacing: -0.02em;
 }
 
@@ -819,6 +817,11 @@ button,
 /* ---- Relationship graph demo ---------------------------------------------
    A mock-data rebuild of the lineage graph. Data objects are small pills,
    tasks are cards; grouped task cards carry the run cycler and status bar. */
+
+/* The graph stays in Archivo whatever the page font is. */
+.rg {
+  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+}
 
 .rg-toolbar {
   display: flex;

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, JetBrains_Mono } from "next/font/google";
+import { Archivo, JetBrains_Mono, Manrope } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Footer } from "@/components/Footer";
@@ -8,7 +8,15 @@ import { THEME_CHROME } from "@/lib/theme";
 import { personalInfo } from "@/data/portfolio";
 import { Analytics } from "@vercel/analytics/next";
 
-/* One family. Archivo is variable on width as well as weight, so the name and
+/* Mockup: Manrope, a variable-weight geometric sans, for the page text. */
+const manrope = Manrope({
+  variable: "--font-manrope",
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
+  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
+});
+
+/* The relationship graph keeps Archivo. One family. Archivo is variable on width as well as weight, so the name and
    headings can be set wide while reading text stays at normal width. */
 const archivo = Archivo({
   variable: "--font-archivo",
@@ -94,7 +102,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${archivo.variable} ${mono.variable}`}
+      className={`${manrope.variable} ${archivo.variable} ${mono.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
