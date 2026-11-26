@@ -2,12 +2,19 @@
 
 import { useEffect, useState } from "react";
 
-const SECTIONS = ["hero", "about", "experience", "graph", "projects", "contact"];
+const SECTIONS = [
+  "hero",
+  "about",
+  "experience",
+  "graph",
+  "projects",
+  "contact",
+];
 
 /**
- * A tmux/vim-style status line pinned to the bottom of the mockup: the file
- * you're "in" follows the section on screen, and the clock is Stuttgart time
- * so a visitor can see what time it is in Stuttgart.
+ * A vim-style status line pinned to the bottom of the mockup. Only what
+ * carries information: where you are on the page, how far down, and the time
+ * in Stuttgart.
  */
 export function StatusBar() {
   const [section, setSection] = useState("hero");
@@ -16,7 +23,7 @@ export function StatusBar() {
 
   useEffect(() => {
     const targets = SECTIONS.map((id) => document.getElementById(id)).filter(
-      (el): el is HTMLElement => el !== null
+      (el): el is HTMLElement => el !== null,
     );
     const observer = new IntersectionObserver(
       (entries) => {
@@ -24,7 +31,7 @@ export function StatusBar() {
           if (entry.isIntersecting) setSection(entry.target.id);
         }
       },
-      { rootMargin: "-45% 0px -50% 0px" }
+      { rootMargin: "-45% 0px -50% 0px" },
     );
     targets.forEach((el) => observer.observe(el));
 
@@ -56,14 +63,10 @@ export function StatusBar() {
 
   return (
     <div className="term-status" aria-hidden="true">
-      <span className="term-status__mode">NORMAL</span>
-      <span className="term-status__seg">
-        <span className="term-status__branch">⎇ main</span>
+      <span className="term-status__mode">
+        {section === "hero" ? "home" : section}
       </span>
-      <span className="term-status__file">~/portfolio/{section}.tsx</span>
       <span className="term-status__spacer" />
-      <span className="term-status__seg term-status__wide">utf-8</span>
-      <span className="term-status__seg term-status__wide">tsx</span>
       <span className="term-status__seg">Stuttgart {time}</span>
       <span className="term-status__pos">{position}</span>
     </div>

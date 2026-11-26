@@ -54,18 +54,18 @@ $ gh pr create --fill && gh pr checks --watch
 /* Hero timeline: each command types out, then its output appears. Times in
    ms; the CSS reads them as custom properties. */
 const COMMANDS = ["whoami", "cat role.txt", "cat about.md", "ls ./actions"];
-const TYPE_MS = 45;
-const PAUSE_MS = 220;
+const TYPE_MS = 22;
+const PAUSE_MS = 90;
 const timeline = (() => {
-  let t = 300;
+  let t = 150;
   return COMMANDS.map((cmd) => {
     const start = t;
     const out = start + cmd.length * TYPE_MS + PAUSE_MS;
-    t = out + 260;
+    t = out + 80;
     return { cmd, start, out };
   });
 })();
-const IDLE_AT = timeline[timeline.length - 1].out + 300;
+const IDLE_AT = timeline[timeline.length - 1].out + 200;
 
 function Cmd({ i }: { i: number }) {
   const { cmd, start } = timeline[i];
@@ -82,9 +82,7 @@ function Cmd({ i }: { i: number }) {
       }
     >
       <span className="term-prompt">$</span>
-      <span className="term-type">
-        {cmd}
-      </span>
+      <span className="term-type">{cmd}</span>
     </p>
   );
 }
@@ -158,28 +156,28 @@ export default function TerminalMockup() {
 
                 <Cmd i={3} />
                 <Out i={3}>
-                <div className="flex flex-wrap items-center gap-3">
-                  <ButtonLink href="#contact" variant="primary" size="lg">
-                    ./get-in-touch
-                  </ButtonLink>
-                  <TrackedCvLink
-                    href={personalInfo.resumeUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    variant="outline"
-                    size="lg"
-                    icon={<Download className="h-4 w-4" aria-hidden="true" />}
-                  >
-                    cv.pdf
-                  </TrackedCvLink>
-                  <SmoothHashLink
-                    href="#graph"
-                    className="focus-ring inline-flex min-h-[44px] items-center gap-1.5 rounded-chip px-1 text-small font-medium text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:decoration-accent"
-                  >
-                    open graph.tsx
-                    <ArrowDown className="h-3.5 w-3.5" aria-hidden="true" />
-                  </SmoothHashLink>
-                </div>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <ButtonLink href="#contact" variant="primary" size="lg">
+                      Get in touch
+                    </ButtonLink>
+                    <TrackedCvLink
+                      href={personalInfo.resumeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      variant="outline"
+                      size="lg"
+                      icon={<Download className="h-4 w-4" aria-hidden="true" />}
+                    >
+                      Download CV
+                    </TrackedCvLink>
+                    <SmoothHashLink
+                      href="#graph"
+                      className="focus-ring inline-flex min-h-[44px] items-center gap-1.5 rounded-chip px-1 text-small font-medium text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:decoration-accent"
+                    >
+                      See the graph I redesigned
+                      <ArrowDown className="h-3.5 w-3.5" aria-hidden="true" />
+                    </SmoothHashLink>
+                  </div>
                 </Out>
 
                 <p

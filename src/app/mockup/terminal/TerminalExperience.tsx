@@ -178,10 +178,6 @@ export function TerminalExperience() {
                         )}
                       >
                         <span aria-hidden="true" className="texp__node" />
-                        <span className="texp__hash" aria-hidden="true">
-                          {shortHash(exp.id)}
-                          {i === 0 && <span className="texp__ref"> HEAD</span>}
-                        </span>
                         <span className="exp__rail-company">{exp.company}</span>
                         <span className="exp__rail-period meta">
                           {exp.period}
@@ -212,7 +208,6 @@ export function TerminalExperience() {
                 <ol className="exp__cards">
                   {experiences.map((exp, i) => {
                     const hash = shortHash(exp.id);
-                    const branch = slug(exp.company);
                     return (
                       <li
                         key={exp.id}
@@ -242,25 +237,6 @@ export function TerminalExperience() {
                             <span className="texp__typed">git show {hash}</span>
                           </p>
                           <div className="texp__output">
-                            {/* git show header: the commit, its refs, then the
-                              role, dates and place as header fields. */}
-                            <p className="texp__commit">
-                              <span aria-hidden="true">commit </span>
-                              <span className="texp__sha" aria-hidden="true">
-                                {hash}
-                              </span>{" "}
-                              <span className="texp__refs">
-                                (
-                                {i === 0 && (
-                                  <>
-                                    <span className="texp__head">
-                                      HEAD -&gt;{" "}
-                                    </span>
-                                  </>
-                                )}
-                                <span className="texp__branch">{branch}</span>)
-                              </span>
-                            </p>
                             <dl className="texp__fields">
                               <dt>Role:</dt>
                               <dd>
@@ -331,7 +307,7 @@ export function TerminalExperience() {
                               </p>
                             )}
 
-                            {/* The stack as a diff stat: what the role added. */}
+                            {/* The stack as diff additions: what the role brought in. */}
                             {exp.techStack.length > 0 && (
                               <div className="texp__diff">
                                 <ul aria-label="Stack" className="texp__stack">
@@ -342,12 +318,6 @@ export function TerminalExperience() {
                                     </li>
                                   ))}
                                 </ul>
-                                <p className="texp__stat" aria-hidden="true">
-                                  {exp.techStack.length} tools changed,{" "}
-                                  <span className="texp__plus">
-                                    {exp.techStack.length} insertions(+)
-                                  </span>
-                                </p>
                               </div>
                             )}
                           </div>
