@@ -12,7 +12,7 @@ Personal portfolio for Talha Masood, full-stack software engineer.
 - **Styling:** Tailwind CSS v4
 - **Interactive Graph:** React Flow (`@xyflow/react`) & Dagre (`@dagrejs/dagre`)
 - **Icons:** Lucide React & Simple Icons
-- **Hosting & Analytics:** Vercel & Vercel Analytics
+- **Hosting:** Vercel
 
 ## Local Development
 
