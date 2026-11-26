@@ -23,7 +23,8 @@ function scrollBehavior(): ScrollBehavior {
  * 1. The site header links point at the home page ("/#about", "/"). Here
  *    they would leave the mockup for the live design, so clicks on them are
  *    kept on this page and scroll to the section instead.
- * 2. Vim-style keys: j / k jump to the next / previous section. Ignored
+ * 2. Vim-style keys: j / k jump to the next / previous section, stepping
+ *    through the Experience roles on the way. Ignored
  *    while typing in a field or with a modifier held, so it never gets in
  *    the way.
  */
@@ -71,6 +72,22 @@ export function MockupNav() {
       targets.forEach((node, i) => {
         if (node.getBoundingClientRect().top <= line) current = i;
       });
+      // Inside Experience, step through the roles first, the same way
+      // scrolling does, and only leave the section after the last (or before
+      // the first) role.
+      if (targets[current]?.id === "experience") {
+        const roles = Array.from(
+          document.querySelectorAll<HTMLButtonElement>(".exp__rail-button"),
+        );
+        const active = roles.findIndex((b) => b.hasAttribute("aria-current"));
+        const step = event.key === "j" ? active + 1 : active - 1;
+        if (active !== -1 && step >= 0 && step < roles.length) {
+          event.preventDefault();
+          roles[step].click();
+          return;
+        }
+      }
+
       const next =
         event.key === "j"
           ? Math.min(targets.length - 1, current + 1)
@@ -78,6 +95,17 @@ export function MockupNav() {
       if (next === current) return;
 
       event.preventDefault();
+      // Coming back up into Experience lands on its last role, so k retraces
+      // exactly what j did.
+      if (event.key === "k" && targets[next].id === "experience") {
+        const roles = document.querySelectorAll<HTMLButtonElement>(
+          ".exp__rail-button",
+        );
+        if (roles.length > 0) {
+          roles[roles.length - 1].click();
+          return;
+        }
+      }
       if (next === 0) {
         window.scrollTo({ top: 0, behavior: scrollBehavior() });
       } else {

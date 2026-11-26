@@ -57,8 +57,8 @@ export function StatusBar() {
     };
   }, []);
 
-  const position =
-    progress <= 0 ? "Top" : progress >= 100 ? "Bot" : `${progress}%`;
+  // Plain percentage rather than vim's Top/Bot, which reads as jargon.
+  const position = `${progress}%`;
 
   return (
     <div className="term-status" aria-hidden="true">

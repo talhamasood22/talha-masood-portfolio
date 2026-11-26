@@ -17,7 +17,8 @@ body:has(.skin-terminal) {
     28px 28px,
     28px 28px;
   background-repeat: no-repeat, repeat, repeat;
-  background-attachment: scroll, fixed, fixed;
+  /* The grid scrolls with the page: a fixed background makes the browser
+     repaint the whole viewport on every scroll frame, and iOS ignores it. */
 }
 
 :root,
