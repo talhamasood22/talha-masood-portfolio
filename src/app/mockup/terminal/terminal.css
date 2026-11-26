@@ -633,3 +633,139 @@ body:has(.skin-terminal) {
 .texp__plus {
   color: var(--status);
 }
+
+/* ---- Window chrome for existing panels ---------------------------------
+   The CAD project card and the contact form card get the same title bar as
+   the hero and Experience windows, drawn with a pseudo-element so the real
+   components stay untouched. Dots are background gradients. */
+
+.skin-terminal #projects article.rounded-panel::before,
+.skin-terminal #contact .rounded-panel::before {
+  display: block;
+  padding: 0.55rem 0.9rem;
+  border-bottom: 1px dashed var(--hairline-strong);
+  background-color: var(--term-chrome);
+  background-image:
+    radial-gradient(circle, var(--accent) 0 3.5px, transparent 4px),
+    radial-gradient(circle, transparent 0 2.5px, var(--hairline-strong) 3px 3.75px, transparent 4.25px),
+    radial-gradient(circle, transparent 0 2.5px, var(--hairline-strong) 3px 3.75px, transparent 4.25px);
+  background-size: 10px 10px;
+  background-repeat: no-repeat;
+  background-position:
+    0.9rem center,
+    calc(0.9rem + 16px) center,
+    calc(0.9rem + 32px) center;
+  font-family: var(--font-term), ui-monospace, monospace;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--faint);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* CAD project: the card is a grid, so the bar spans every column and pulls
+   out over the card's padding. */
+.skin-terminal #projects article.rounded-panel {
+  overflow: hidden;
+  border-color: var(--hairline-strong);
+}
+
+.skin-terminal #projects article.rounded-panel::before {
+  content: "~/projects/multi-agent-cad";
+  grid-column: 1 / -1;
+  margin: -1.5rem -1.5rem 0;
+}
+
+@media (min-width: 768px) {
+  .skin-terminal #projects article.rounded-panel::before {
+    margin: -2.25rem -2.25rem 0;
+  }
+}
+
+/* "How it works": numbered steps become square markers on a dashed line. */
+.skin-terminal #projects ol.border-l {
+  border-left-style: dashed;
+}
+
+.skin-terminal #projects ol.border-l > li > span[aria-hidden="true"] {
+  border-radius: 0.25rem;
+  font-family: var(--font-term), ui-monospace, monospace;
+  background-color: var(--term-chrome);
+}
+
+/* Contact form card. */
+.skin-terminal #contact .rounded-panel {
+  border-color: var(--hairline-strong);
+}
+
+.skin-terminal #contact .rounded-panel::before {
+  content: "~/contact — new message";
+}
+
+.skin-terminal #contact .rounded-panel input,
+.skin-terminal #contact .rounded-panel textarea {
+  font-family: var(--font-term), ui-monospace, monospace;
+  font-size: 0.9375rem;
+  caret-color: var(--accent);
+}
+
+/* ---- Graph demo as one window -----------------------------------------
+   Toolbar = title bar, hint = a comment line, canvas = the window body. */
+
+.skin-terminal .rg {
+  overflow: hidden;
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius-panel);
+  background-color: var(--panel);
+}
+
+.skin-terminal .rg-toolbar {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px dashed var(--hairline-strong);
+  background-color: var(--term-chrome);
+}
+
+.skin-terminal .rg-toggle,
+.skin-terminal .rg-toggle__button {
+  border-radius: var(--radius-chip);
+}
+
+.skin-terminal .rg-stats {
+  font-family: var(--font-term), ui-monospace, monospace;
+  font-size: 0.8125rem;
+}
+
+.skin-terminal .rg-hint {
+  margin: 0;
+  max-width: none;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-term), ui-monospace, monospace;
+  font-size: 0.8125rem;
+}
+
+.skin-terminal .rg-hint::before {
+  content: "# ";
+  color: var(--status);
+}
+
+.skin-terminal .rg-canvas {
+  border: 0;
+  border-top: 1px dashed var(--hairline);
+  border-radius: 0;
+}
+
+.skin-terminal .rg-caption {
+  border-radius: var(--radius-chip);
+  font-family: var(--font-term), ui-monospace, monospace;
+}
+
+.skin-terminal .rg .react-flow__node {
+  font-family: var(--font-term), ui-monospace, monospace;
+}
+
+.skin-terminal .rg-task {
+  border-radius: 0.25rem;
+}

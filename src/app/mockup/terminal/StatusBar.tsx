@@ -25,17 +25,17 @@ export function StatusBar() {
     const targets = SECTIONS.map((id) => document.getElementById(id)).filter(
       (el): el is HTMLElement => el !== null,
     );
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) setSection(entry.target.id);
-        }
-      },
-      { rootMargin: "-45% 0px -50% 0px" },
-    );
-    targets.forEach((el) => observer.observe(el));
-
+    // The section under a reading line 45% down the screen. Measured on
+    // scroll rather than with an observer, so a jump (nav click, anchor)
+    // never leaves it showing the previous section.
     const onScroll = () => {
+      const line = window.innerHeight * 0.45;
+      let current = targets[0]?.id ?? "hero";
+      for (const el of targets) {
+        if (el.getBoundingClientRect().top <= line) current = el.id;
+      }
+      setSection(current);
+
       const max = document.documentElement.scrollHeight - window.innerHeight;
       setProgress(max > 0 ? Math.round((window.scrollY / max) * 100) : 0);
     };
@@ -52,7 +52,6 @@ export function StatusBar() {
     const clock = window.setInterval(tick, 30_000);
 
     return () => {
-      observer.disconnect();
       window.removeEventListener("scroll", onScroll);
       window.clearInterval(clock);
     };
