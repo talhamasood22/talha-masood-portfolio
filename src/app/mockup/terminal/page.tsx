@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type React from "react";
 import { JetBrains_Mono } from "next/font/google";
 import { ArrowDown, Download } from "lucide-react";
 import { AboutSection } from "@/components/AboutSection";
@@ -11,6 +12,7 @@ import { ButtonLink } from "@/components/ui/ButtonLink";
 import { TrackedCvLink } from "@/components/TrackedCvLink";
 import { SmoothHashLink } from "@/components/SmoothHashLink";
 import { personalInfo } from "@/data/portfolio";
+import { StatusBar } from "./StatusBar";
 import "./terminal.css";
 
 /* Test mockup of a terminal-flavoured skin. Not linked from the site and kept
@@ -49,6 +51,55 @@ const nodes = useMemo(() => groupRuns(runs, { keepIndependent: true }), [runs]);
 $ gh pr create --fill && gh pr checks --watch
 ✓ preview deployed in 4m 52s`;
 
+/* Hero timeline: each command types out, then its output appears. Times in
+   ms; the CSS reads them as custom properties. */
+const COMMANDS = ["whoami", "cat role.txt", "cat about.md", "ls ./actions"];
+const TYPE_MS = 45;
+const PAUSE_MS = 220;
+const timeline = (() => {
+  let t = 300;
+  return COMMANDS.map((cmd) => {
+    const start = t;
+    const out = start + cmd.length * TYPE_MS + PAUSE_MS;
+    t = out + 260;
+    return { cmd, start, out };
+  });
+})();
+const IDLE_AT = timeline[timeline.length - 1].out + 300;
+
+function Cmd({ i }: { i: number }) {
+  const { cmd, start } = timeline[i];
+  return (
+    <p
+      className="term-cmd"
+      aria-hidden="true"
+      style={
+        {
+          "--n": cmd.length,
+          "--d": `${start}ms`,
+          "--t": `${cmd.length * TYPE_MS}ms`,
+        } as React.CSSProperties
+      }
+    >
+      <span className="term-prompt">$</span>
+      <span className="term-type">
+        {cmd}
+      </span>
+    </p>
+  );
+}
+
+function Out({ i, children }: { i: number; children: React.ReactNode }) {
+  return (
+    <div
+      className="term-out"
+      style={{ "--d": `${timeline[i].out}ms` } as React.CSSProperties}
+    >
+      {children}
+    </div>
+  );
+}
+
 export default function TerminalMockup() {
   return (
     <div className="skin-terminal">
@@ -77,38 +128,37 @@ export default function TerminalMockup() {
               </div>
 
               <div className="term-body">
-                <p className="term-cmd" aria-hidden="true">
-                  <span className="term-prompt">$</span> whoami
-                </p>
-                <h1
-                  id="hero-heading"
-                  className="hero-title term-name text-ink"
-                >
-                  <span id="hero-name" className="hero-morph">
-                    {personalInfo.name}
-                  </span>
-                </h1>
+                <Cmd i={0} />
+                <Out i={0}>
+                  <h1
+                    id="hero-heading"
+                    className="hero-title term-name text-ink"
+                  >
+                    <span id="hero-name" className="hero-morph">
+                      {personalInfo.name}
+                    </span>
+                  </h1>
+                </Out>
 
-                <p className="term-cmd" aria-hidden="true">
-                  <span className="term-prompt">$</span> cat role.txt
-                </p>
-                <p className="term-role text-accent">
-                  <span id="hero-role" className="hero-morph">
-                    {personalInfo.title}
-                  </span>
-                </p>
+                <Cmd i={1} />
+                <Out i={1}>
+                  <p className="term-role text-accent">
+                    <span id="hero-role" className="hero-morph">
+                      {personalInfo.title}
+                    </span>
+                  </p>
+                </Out>
 
-                <p className="term-cmd" aria-hidden="true">
-                  <span className="term-prompt">$</span> cat about.md
-                </p>
-                <p className="max-w-[56ch] text-lede text-ink text-pretty">
-                  {personalInfo.headline}
-                </p>
+                <Cmd i={2} />
+                <Out i={2}>
+                  <p className="max-w-[56ch] text-lede text-ink text-pretty">
+                    {personalInfo.headline}
+                  </p>
+                </Out>
 
-                <p className="term-cmd" aria-hidden="true">
-                  <span className="term-prompt">$</span> ls ./actions
-                </p>
-                <div className="mt-3 flex flex-wrap items-center gap-3">
+                <Cmd i={3} />
+                <Out i={3}>
+                <div className="flex flex-wrap items-center gap-3">
                   <ButtonLink href="#contact" variant="primary" size="lg">
                     ./get-in-touch
                   </ButtonLink>
@@ -130,8 +180,13 @@ export default function TerminalMockup() {
                     <ArrowDown className="h-3.5 w-3.5" aria-hidden="true" />
                   </SmoothHashLink>
                 </div>
+                </Out>
 
-                <p className="term-cmd term-idle" aria-hidden="true">
+                <p
+                  className="term-cmd term-idle"
+                  aria-hidden="true"
+                  style={{ "--d": `${IDLE_AT}ms` } as React.CSSProperties}
+                >
                   <span className="term-prompt">$</span>
                   <span className="term-cursor" />
                 </p>
@@ -150,6 +205,7 @@ export default function TerminalMockup() {
       <RelationshipGraphSection />
       <ProjectsSection />
       <ContactSection />
+      <StatusBar />
     </div>
   );
 }
