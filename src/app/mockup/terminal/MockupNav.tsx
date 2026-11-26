@@ -23,8 +23,8 @@ function scrollBehavior(): ScrollBehavior {
  * 1. The site header links point at the home page ("/#about", "/"). Here
  *    they would leave the mockup for the live design, so clicks on them are
  *    kept on this page and scroll to the section instead.
- * 2. Vim-style keys: j / k jump to the next / previous section, stepping
- *    through the Experience roles on the way. Ignored
+ * 2. Keys: k jumps to the next section (down), j to the previous one (up),
+ *    stepping through the Experience roles on the way. Ignored
  *    while typing in a field or with a modifier held, so it never gets in
  *    the way.
  */
@@ -80,7 +80,7 @@ export function MockupNav() {
           document.querySelectorAll<HTMLButtonElement>(".exp__rail-button"),
         );
         const active = roles.findIndex((b) => b.hasAttribute("aria-current"));
-        const step = event.key === "j" ? active + 1 : active - 1;
+        const step = event.key === "k" ? active + 1 : active - 1;
         if (active !== -1 && step >= 0 && step < roles.length) {
           event.preventDefault();
           roles[step].click();
@@ -89,15 +89,15 @@ export function MockupNav() {
       }
 
       const next =
-        event.key === "j"
+        event.key === "k"
           ? Math.min(targets.length - 1, current + 1)
           : Math.max(0, current - 1);
       if (next === current) return;
 
       event.preventDefault();
-      // Coming back up into Experience lands on its last role, so k retraces
-      // exactly what j did.
-      if (event.key === "k" && targets[next].id === "experience") {
+      // Coming back up into Experience lands on its last role, so j retraces
+      // exactly what k did.
+      if (event.key === "j" && targets[next].id === "experience") {
         const roles = document.querySelectorAll<HTMLButtonElement>(
           ".exp__rail-button",
         );

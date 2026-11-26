@@ -67,7 +67,7 @@ export function StatusBar() {
       </span>
       <span className="term-status__spacer" />
       <span className="term-status__keys">
-        <kbd>j</kbd>/<kbd>k</kbd> sections
+        <kbd>k</kbd> next · <kbd>j</kbd> previous
       </span>
       <span className="term-status__seg">Stuttgart {time}</span>
       <span className="term-status__pos">{position}</span>
