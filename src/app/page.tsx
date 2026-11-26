@@ -4,12 +4,13 @@ import { AboutSection } from "@/components/AboutSection";
 import { ExperienceSection } from "@/components/ExperienceSection";
 import { RelationshipGraphSection } from "@/components/RelationshipGraphSection";
 import { ProjectsSection } from "@/components/ProjectsSection";
+import { SkillsSection } from "@/components/SkillsSection";
 import { ContactSection } from "@/components/ContactSection";
 
 /**
- * Education and Skills are deliberately not on the page: the degrees and the
- * gold medal are told in About, and the full stack and grades live in the CV.
- * Their components and data are kept in case they come back.
+ * Education is deliberately not on the page: the degrees and the gold medal
+ * are told in About, and the grades live in the CV. Its component and data
+ * are kept in case it comes back.
  */
 export default function Home() {
   return (
@@ -19,6 +20,7 @@ export default function Home() {
       <ExperienceSection />
       <RelationshipGraphSection />
       <ProjectsSection />
+      <SkillsSection />
       <ContactSection />
     </>
   );

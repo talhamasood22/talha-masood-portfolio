@@ -113,6 +113,8 @@ export interface EducationItem {
 export interface SkillCategory {
   id: string;
   category: string;
+  /** One or two sentences on where the group comes from in my work. */
+  summary: string;
   skills: string[];
 }
 
@@ -125,6 +127,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "Experience", href: "#experience", id: "experience" },
   { label: "Graph", href: "#graph", id: "graph" },
   { label: "Projects", href: "#projects", id: "projects" },
+  { label: "Skills", href: "#skills", id: "skills" },
   { label: "Contact", href: "#contact", id: "contact" },
 ];
 
@@ -376,11 +379,15 @@ export const skills: SkillCategory[] = [
   {
     id: "languages",
     category: "Languages",
+    summary:
+      "TypeScript most days, Python wherever there's data or a model involved.",
     skills: ["TypeScript", "JavaScript", "Python", "SQL", "PHP"],
   },
   {
     id: "frontend-mobile",
     category: "Frontend and mobile",
+    summary:
+      "Interfaces that make dense data readable, from a task-run graph for scientists to a real-estate app with more than 100,000 users.",
     skills: [
       "React",
       "React Flow",
@@ -397,6 +404,8 @@ export const skills: SkillCategory[] = [
   {
     id: "backend-databases",
     category: "Backend and data",
+    summary:
+      "APIs and data models behind internal tools, lead ranking and real-time chat.",
     skills: [
       "FastAPI",
       "Node.js",
@@ -411,6 +420,8 @@ export const skills: SkillCategory[] = [
   {
     id: "cloud-devops",
     category: "Cloud and DevOps",
+    summary:
+      "Repeatable deploys and a preview environment on every pull request, so people try a change before it lands.",
     skills: [
       "Docker",
       "GitHub Actions",
@@ -425,6 +436,8 @@ export const skills: SkillCategory[] = [
   {
     id: "ai-llm-ml",
     category: "LLMs and ML",
+    summary:
+      "Agent pipelines scored against ground truth, plus a few computer-vision and ML projects.",
     skills: [
       "Agent pipelines",
       "vLLM",
@@ -438,6 +451,8 @@ export const skills: SkillCategory[] = [
   {
     id: "testing-tools",
     category: "Testing and tools",
+    summary:
+      "Vitest and Testing Library on the frontend, Postman for APIs, and small stacked pull requests with Graphite.",
     skills: [
       "Vitest",
       "React Testing Library",
