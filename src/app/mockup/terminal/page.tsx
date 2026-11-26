@@ -3,7 +3,6 @@ import type React from "react";
 import { JetBrains_Mono } from "next/font/google";
 import { ArrowDown, Download } from "lucide-react";
 import { AboutSection } from "@/components/AboutSection";
-import { ExperienceSection } from "@/components/ExperienceSection";
 import { RelationshipGraphSection } from "@/components/RelationshipGraphSection";
 import { ProjectsSection } from "@/components/ProjectsSection";
 import { ContactSection } from "@/components/ContactSection";
@@ -13,6 +12,7 @@ import { TrackedCvLink } from "@/components/TrackedCvLink";
 import { SmoothHashLink } from "@/components/SmoothHashLink";
 import { personalInfo } from "@/data/portfolio";
 import { StatusBar } from "./StatusBar";
+import { TerminalExperience } from "./TerminalExperience";
 import "./terminal.css";
 
 /* Test mockup of a terminal-flavoured skin. Not linked from the site and kept
@@ -201,7 +201,7 @@ export default function TerminalMockup() {
       </section>
 
       <AboutSection />
-      <ExperienceSection />
+      <TerminalExperience />
       <RelationshipGraphSection />
       <ProjectsSection />
       <ContactSection />
