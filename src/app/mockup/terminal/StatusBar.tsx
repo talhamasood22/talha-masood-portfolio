@@ -13,12 +13,10 @@ const SECTIONS = [
 
 /**
  * A vim-style status line pinned to the bottom of the mockup. Only what
- * carries information: where you are on the page, how far down, and the time
- * in Stuttgart.
+ * carries information: where you are on the page and how far down.
  */
 export function StatusBar() {
   const [section, setSection] = useState("hero");
-  const [time, setTime] = useState("");
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -42,18 +40,8 @@ export function StatusBar() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
 
-    const fmt = new Intl.DateTimeFormat("en-GB", {
-      timeZone: "Europe/Berlin",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-    const tick = () => setTime(fmt.format(new Date()));
-    tick();
-    const clock = window.setInterval(tick, 30_000);
-
     return () => {
       window.removeEventListener("scroll", onScroll);
-      window.clearInterval(clock);
     };
   }, []);
 
@@ -69,7 +57,6 @@ export function StatusBar() {
       <span className="term-status__keys">
         <kbd>j</kbd> next · <kbd>k</kbd> previous
       </span>
-      <span className="term-status__seg">Stuttgart {time}</span>
       <span className="term-status__pos">{position}</span>
     </div>
   );
