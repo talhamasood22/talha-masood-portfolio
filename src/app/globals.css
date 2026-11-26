@@ -78,7 +78,7 @@
   --color-status: var(--status);
   --color-field-border: var(--field-border);
 
-  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-serif), Garamond, Georgia, serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
 
@@ -130,7 +130,8 @@ body {
   background-color: var(--page);
   color: var(--ink);
   font-family: var(--font-sans);
-  font-size: 1.0625rem;
+  /* Garamond's small x-height reads a size smaller than Archivo. */
+  font-size: 1.1875rem;
   line-height: 1.65;
   min-height: 100dvh;
   /* `clip` rather than `hidden`: hidden makes the body a scroll container,
@@ -185,15 +186,13 @@ button,
    the docked masthead and the headline figures are set wide; section
    headings slightly wide; everything you read is set at normal width. */
 .font-display {
-  font-stretch: 118%;
-  font-weight: 650;
-  letter-spacing: -0.03em;
+  font-weight: 600;
+  letter-spacing: -0.015em;
 }
 
 .font-heading {
-  font-stretch: 108%;
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.005em;
 }
 
 /* Small supporting text: dates, places, categories. Sentence case, untracked,

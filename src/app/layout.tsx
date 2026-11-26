@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, JetBrains_Mono } from "next/font/google";
+import { EB_Garamond, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Footer } from "@/components/Footer";
@@ -8,14 +8,13 @@ import { THEME_CHROME } from "@/lib/theme";
 import { personalInfo } from "@/data/portfolio";
 import { Analytics } from "@vercel/analytics/next";
 
-/* One family. Archivo is variable on width as well as weight, so the name and
-   headings can be set wide while reading text stays at normal width. */
-const archivo = Archivo({
-  variable: "--font-archivo",
+/* Mockup: EB Garamond, a variable-weight old-style serif, for everything
+   except the monospace accent. */
+const serif = EB_Garamond({
+  variable: "--font-serif",
   subsets: ["latin", "latin-ext"],
-  axes: ["wdth"],
   display: "swap",
-  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
+  fallback: ["Garamond", "Georgia", "serif"],
 });
 
 /* A monospace accent for numbers and tech names only (badges, stats, chart
@@ -94,7 +93,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${archivo.variable} ${mono.variable}`}
+      className={`${serif.variable} ${mono.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
