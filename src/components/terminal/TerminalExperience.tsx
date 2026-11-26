@@ -28,7 +28,7 @@ function slug(name: string) {
 }
 
 /**
- * Terminal-mockup copy of the Experience section: the same scroll and pinning
+ * Terminal-theme version of the Experience section: the same scroll and pinning
  * behaviour, with the work history shown as git history. The rail is
  * `git log --graph`, each role is `git show <hash>`.
  *

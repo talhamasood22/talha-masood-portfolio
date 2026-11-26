@@ -12,7 +12,7 @@ const SECTIONS = [
 ];
 
 /**
- * A vim-style status line pinned to the bottom of the mockup. Only what
+ * A vim-style status line pinned to the bottom of the page. Only what
  * carries information: where you are on the page and how far down.
  */
 export function StatusBar() {

@@ -18,38 +18,13 @@ function scrollBehavior(): ScrollBehavior {
 }
 
 /**
- * Two small behaviours for the mockup page, with no UI of their own:
- *
- * 1. The site header links point at the home page ("/#about", "/"). Here
- *    they would leave the mockup for the live design, so clicks on them are
- *    kept on this page and scroll to the section instead.
- * 2. Vim keys: j jumps to the next section (down), k to the previous one
- *    (up), stepping through the Experience roles on the way. Ignored
- *    while typing in a field or with a modifier held, so it never gets in
- *    the way.
+ * Vim keys for the terminal home page, with no UI of their own: j jumps to
+ * the next section (down), k to the previous one (up), stepping through the
+ * Experience roles on the way. Ignored while typing in a field, while the
+ * menu is open, or with a modifier held, so it never gets in the way.
  */
-export function MockupNav() {
+export function TerminalKeys() {
   useEffect(() => {
-    const onClick = (event: MouseEvent) => {
-      if (event.defaultPrevented || event.button !== 0) return;
-      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
-        return;
-      const link = (event.target as Element | null)?.closest?.("a");
-      if (!link) return;
-      const href = link.getAttribute("href");
-      if (href === "/") {
-        event.preventDefault();
-        window.scrollTo({ top: 0, behavior: scrollBehavior() });
-        return;
-      }
-      const match = href?.match(/^\/#([\w-]+)$/);
-      const target = match && document.getElementById(match[1]);
-      if (target) {
-        event.preventDefault();
-        target.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
-      }
-    };
-
     const onKey = (event: KeyboardEvent) => {
       if (event.metaKey || event.ctrlKey || event.altKey) return;
       if (event.key !== "j" && event.key !== "k") return;
@@ -116,10 +91,8 @@ export function MockupNav() {
       }
     };
 
-    document.addEventListener("click", onClick, true);
     document.addEventListener("keydown", onKey);
     return () => {
-      document.removeEventListener("click", onClick, true);
       document.removeEventListener("keydown", onKey);
     };
   }, []);
