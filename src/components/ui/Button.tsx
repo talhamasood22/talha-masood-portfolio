@@ -21,7 +21,7 @@ export function buttonClassName({
   className,
 }: ButtonStyleOptions = {}) {
   const baseStyles =
-    "group inline-flex items-center justify-center font-medium rounded-chip cursor-pointer select-none min-h-[44px] transition-colors duration-200 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-page disabled:pointer-events-none disabled:opacity-50";
+    "group font-ui inline-flex items-center justify-center font-medium rounded-chip cursor-pointer select-none min-h-[44px] transition-colors duration-200 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-page disabled:pointer-events-none disabled:opacity-50";
 
   const variantStyles: Record<ButtonVariant, string> = {
     primary: "bg-accent text-on-accent hover:bg-accent-soft font-semibold",

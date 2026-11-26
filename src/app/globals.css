@@ -80,6 +80,9 @@
 
   --font-sans: var(--font-serif), Palatino, Georgia, serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  /* Interface text (navigation, buttons, form fields, small supporting
+     text, the graph) is set in Archivo; reading text stays in Pagella X. */
+  --font-ui: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
 }
 
 /* ---- Type scale ---------------------------------------------------------
@@ -201,6 +204,26 @@ button,
   line-height: var(--text-meta--line-height);
   color: var(--faint);
   font-variant-numeric: tabular-nums;
+}
+
+/* Interface text in Archivo. The name and headings set inside these
+   (masthead, drawer, footer) stay in Pagella X. */
+.meta,
+button,
+input,
+textarea,
+select,
+label,
+.nav-bar,
+.nav-panel,
+.site-drawer,
+footer {
+  font-family: var(--font-ui);
+}
+
+.font-display,
+.font-heading {
+  font-family: var(--font-sans);
 }
 
 /* ---- Focus ------------------------------------------------------------ */
@@ -818,10 +841,9 @@ button,
    A mock-data rebuild of the lineage graph. Data objects are small pills,
    tasks are cards; grouped task cards carry the run cycler and status bar. */
 
-/* The graph stays in Archivo at the original body size whatever the page
-   font is. */
+/* The graph is interface: Archivo at the original body size. */
 .rg {
-  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-ui);
   font-size: 1.0625rem;
 }
 
