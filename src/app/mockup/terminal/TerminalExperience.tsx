@@ -21,7 +21,10 @@ function shortHash(id: string) {
 
 /** Branch-style slug for a company: "Mercedes-Benz AG" -> "mercedes-benz-ag". */
 function slug(name: string) {
-  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 }
 
 /**
@@ -87,7 +90,10 @@ export function TerminalExperience() {
 
       // Per-role fill (0 → 1) for each rail item's line.
       rail.querySelectorAll<HTMLElement>("[data-step]").forEach((item, i) => {
-        item.style.setProperty("--fill", clamp(progress * STEPS - i).toFixed(3));
+        item.style.setProperty(
+          "--fill",
+          clamp(progress * STEPS - i).toFixed(3),
+        );
       });
 
       if (index !== activeRef.current) {
@@ -113,7 +119,8 @@ export function TerminalExperience() {
   const goTo = (index: number) => {
     const runway = runwayRef.current;
     if (!runway) return;
-    const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)")
+      .matches;
 
     if (isPinned()) {
       const { distance, pinTop } = pinMetrics(runway);
@@ -165,7 +172,9 @@ export function TerminalExperience() {
                         aria-current={i === active ? "step" : undefined}
                         className={cn(
                           "focus-ring exp__rail-button",
-                          i === active ? "text-ink" : "text-faint hover:text-muted"
+                          i === active
+                            ? "text-ink"
+                            : "text-faint hover:text-muted",
                         )}
                       >
                         <span aria-hidden="true" className="texp__node" />
@@ -174,7 +183,9 @@ export function TerminalExperience() {
                           {i === 0 && <span className="texp__ref"> HEAD</span>}
                         </span>
                         <span className="exp__rail-company">{exp.company}</span>
-                        <span className="exp__rail-period meta">{exp.period}</span>
+                        <span className="exp__rail-period meta">
+                          {exp.period}
+                        </span>
                         <span aria-hidden="true" className="exp__rail-line" />
                       </button>
                     </li>
@@ -182,137 +193,170 @@ export function TerminalExperience() {
                 </ol>
               </nav>
 
-              <ol className="exp__cards lg:col-span-9">
-                {experiences.map((exp, i) => {
-                  const hash = shortHash(exp.id);
-                  const branch = slug(exp.company);
-                  return (
-                    <li
-                      key={exp.id}
-                      ref={(el) => {
-                        cardRefs.current[i] = el;
-                      }}
-                      data-state={
-                        i === active ? "active" : i < active ? "before" : "after"
-                      }
-                      className="exp__card"
-                    >
-                      <article className="texp__window">
-                        <div className="term-titlebar" aria-hidden="true">
-                          <span className="term-dots">
-                            <i />
-                            <i />
-                            <i />
-                          </span>
-                          <span className="term-path">
-                            ~/experience — git show {hash}
-                          </span>
-                        </div>
-
-                        <div className="texp__body">
-                          {/* git show header: the commit, its refs, then the
-                              role, dates and place as header fields. */}
-                          <p className="texp__commit">
-                            <span aria-hidden="true">commit </span>
-                            <span className="texp__sha" aria-hidden="true">
-                              {hash}
-                            </span>{" "}
-                            <span className="texp__refs">
-                              (
-                              {i === 0 && (
-                                <>
-                                  <span className="texp__head">HEAD -&gt; </span>
-                                </>
-                              )}
-                              <span className="texp__branch">{branch}</span>)
-                            </span>
+              {/* One terminal for every role: the window stays put and only
+                  its output changes, as if `git show` were run again. */}
+              <div className="texp__window lg:col-span-9">
+                <div className="term-titlebar" aria-hidden="true">
+                  <span className="term-dots">
+                    <i />
+                    <i />
+                    <i />
+                  </span>
+                  <span className="term-path">
+                    talha@stuttgart: ~/experience
+                  </span>
+                  <span className="term-tab">
+                    {slug(experiences[active].company)}
+                  </span>
+                </div>
+                <ol className="exp__cards">
+                  {experiences.map((exp, i) => {
+                    const hash = shortHash(exp.id);
+                    const branch = slug(exp.company);
+                    return (
+                      <li
+                        key={exp.id}
+                        ref={(el) => {
+                          cardRefs.current[i] = el;
+                        }}
+                        data-state={
+                          i === active
+                            ? "active"
+                            : i < active
+                              ? "before"
+                              : "after"
+                        }
+                        className="exp__card"
+                      >
+                        <article className="texp__body">
+                          <p
+                            className="texp__run"
+                            aria-hidden="true"
+                            style={
+                              {
+                                "--n": `git show ${hash}`.length,
+                              } as React.CSSProperties
+                            }
+                          >
+                            <span className="term-prompt">$</span>
+                            <span className="texp__typed">git show {hash}</span>
                           </p>
-                          <dl className="texp__fields">
-                            <dt>Role:</dt>
-                            <dd>
-                              <h3 className="texp__role">{exp.role}</h3>
-                            </dd>
-                            <dt>Date:</dt>
-                            <dd>{exp.period}</dd>
-                            <dt>Where:</dt>
-                            <dd>
-                              {exp.location}
-                              {exp.employmentType &&
-                                ` · ${exp.employmentType.toLowerCase()}`}
-                            </dd>
-                          </dl>
-
-                          {/* The message, indented like a commit body. The
-                              first paragraph is the subject line. */}
-                          <div className="texp__message exp__measure max-w-[66ch] space-y-3">
-                            {exp.story.map((paragraph, p) => (
-                              <p
-                                key={paragraph}
-                                className={cn(
-                                  "text-pretty",
-                                  p === 0
-                                    ? "text-base leading-relaxed text-ink"
-                                    : "text-small text-muted"
+                          <div className="texp__output">
+                            {/* git show header: the commit, its refs, then the
+                              role, dates and place as header fields. */}
+                            <p className="texp__commit">
+                              <span aria-hidden="true">commit </span>
+                              <span className="texp__sha" aria-hidden="true">
+                                {hash}
+                              </span>{" "}
+                              <span className="texp__refs">
+                                (
+                                {i === 0 && (
+                                  <>
+                                    <span className="texp__head">
+                                      HEAD -&gt;{" "}
+                                    </span>
+                                  </>
                                 )}
-                              >
-                                {paragraph}
-                              </p>
-                            ))}
-                          </div>
-
-                          {(exp.link ||
-                            (exp.externalLinks && exp.externalLinks.length > 0)) && (
-                            <p className="texp__links">
-                              {exp.link && (
-                                <SmoothHashLink
-                                  href={exp.link.href}
-                                  className="focus-ring inline-flex min-h-[44px] items-center gap-1.5 rounded-chip text-small font-medium text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:decoration-accent"
-                                >
-                                  {exp.link.label}
-                                  <ArrowDown className="h-3.5 w-3.5" aria-hidden="true" />
-                                </SmoothHashLink>
-                              )}
-                              {exp.externalLinks?.map((link) => (
-                                <a
-                                  key={link.href}
-                                  href={link.href}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="focus-ring inline-flex min-h-[44px] items-center gap-1 rounded-chip text-small font-medium text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:decoration-accent"
-                                >
-                                  {link.label}
-                                  <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
-                                  <span className="sr-only">(opens in a new tab)</span>
-                                </a>
-                              ))}
+                                <span className="texp__branch">{branch}</span>)
+                              </span>
                             </p>
-                          )}
+                            <dl className="texp__fields">
+                              <dt>Role:</dt>
+                              <dd>
+                                <h3 className="texp__role">{exp.role}</h3>
+                              </dd>
+                              <dt>Date:</dt>
+                              <dd>{exp.period}</dd>
+                              <dt>Where:</dt>
+                              <dd>
+                                {exp.location}
+                                {exp.employmentType &&
+                                  ` · ${exp.employmentType.toLowerCase()}`}
+                              </dd>
+                            </dl>
 
-                          {/* The stack as a diff stat: what the role added. */}
-                          {exp.techStack.length > 0 && (
-                            <div className="texp__diff">
-                              <ul aria-label="Stack" className="texp__stack">
-                                {exp.techStack.map((tech) => (
-                                  <li key={tech}>
-                                    <span aria-hidden="true">+ </span>
-                                    {tech}
-                                  </li>
-                                ))}
-                              </ul>
-                              <p className="texp__stat" aria-hidden="true">
-                                {exp.techStack.length} tools changed,{" "}
-                                <span className="texp__plus">
-                                  {exp.techStack.length} insertions(+)
-                                </span>
-                              </p>
+                            {/* The message, indented like a commit body. The
+                              first paragraph is the subject line. */}
+                            <div className="texp__message exp__measure max-w-[66ch] space-y-3">
+                              {exp.story.map((paragraph, p) => (
+                                <p
+                                  key={paragraph}
+                                  className={cn(
+                                    "text-pretty",
+                                    p === 0
+                                      ? "text-base leading-relaxed text-ink"
+                                      : "text-small text-muted",
+                                  )}
+                                >
+                                  {paragraph}
+                                </p>
+                              ))}
                             </div>
-                          )}
-                        </div>
-                      </article>
-                    </li>
-                  );
-                })}
-              </ol>
+
+                            {(exp.link ||
+                              (exp.externalLinks &&
+                                exp.externalLinks.length > 0)) && (
+                              <p className="texp__links">
+                                {exp.link && (
+                                  <SmoothHashLink
+                                    href={exp.link.href}
+                                    className="focus-ring inline-flex min-h-[44px] items-center gap-1.5 rounded-chip text-small font-medium text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:decoration-accent"
+                                  >
+                                    {exp.link.label}
+                                    <ArrowDown
+                                      className="h-3.5 w-3.5"
+                                      aria-hidden="true"
+                                    />
+                                  </SmoothHashLink>
+                                )}
+                                {exp.externalLinks?.map((link) => (
+                                  <a
+                                    key={link.href}
+                                    href={link.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="focus-ring inline-flex min-h-[44px] items-center gap-1 rounded-chip text-small font-medium text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:decoration-accent"
+                                  >
+                                    {link.label}
+                                    <ArrowUpRight
+                                      className="h-3.5 w-3.5"
+                                      aria-hidden="true"
+                                    />
+                                    <span className="sr-only">
+                                      (opens in a new tab)
+                                    </span>
+                                  </a>
+                                ))}
+                              </p>
+                            )}
+
+                            {/* The stack as a diff stat: what the role added. */}
+                            {exp.techStack.length > 0 && (
+                              <div className="texp__diff">
+                                <ul aria-label="Stack" className="texp__stack">
+                                  {exp.techStack.map((tech) => (
+                                    <li key={tech}>
+                                      <span aria-hidden="true">+ </span>
+                                      {tech}
+                                    </li>
+                                  ))}
+                                </ul>
+                                <p className="texp__stat" aria-hidden="true">
+                                  {exp.techStack.length} tools changed,{" "}
+                                  <span className="texp__plus">
+                                    {exp.techStack.length} insertions(+)
+                                  </span>
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </article>
+                      </li>
+                    );
+                  })}
+                </ol>
+              </div>
             </div>
           </div>
         </div>
@@ -326,7 +370,7 @@ export function TerminalExperience() {
 /** Same query as the pinned layout in globals.css. */
 function isPinned() {
   return window.matchMedia(
-    "(min-width: 1024px) and (min-height: 700px) and (prefers-reduced-motion: no-preference)"
+    "(min-width: 1024px) and (min-height: 700px) and (prefers-reduced-motion: no-preference)",
   ).matches;
 }
 

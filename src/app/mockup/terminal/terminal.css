@@ -461,23 +461,17 @@ body:has(.skin-terminal) {
   }
 }
 
-/* The card: a terminal window running `git show`. */
+/* One terminal window holds every role; only its output changes. */
 .texp__window {
-  border: 1px solid var(--hairline);
+  border: 1px solid var(--hairline-strong);
   border-radius: var(--radius-panel);
   background-color: var(--panel);
   overflow: hidden;
-  transition: border-color 300ms ease;
 }
 
-.exp__card[data-state="active"] > .texp__window {
-  border-color: var(--hairline-strong);
-}
-
-@media (min-width: 1024px) and (min-height: 700px) and (prefers-reduced-motion: no-preference) {
-  .texp .exp__card > .texp__window {
-    padding: 0;
-  }
+.texp .exp__cards {
+  gap: 0;
+  margin-top: 0;
 }
 
 .texp__body {
@@ -487,6 +481,59 @@ body:has(.skin-terminal) {
 @media (min-width: 640px) {
   .texp__body {
     padding: 1.25rem 1.5rem 1.5rem;
+  }
+}
+
+/* List mode (phones, reduced motion): the roles are one scrolling session,
+   each output starting with its own command, divided by a dashed rule. */
+.texp .exp__card {
+  animation: none;
+}
+
+.texp .exp__card:not(:first-child) {
+  border-top: 1px dashed var(--hairline-strong);
+}
+
+.texp__run {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 0.75rem;
+  font-family: var(--font-term), ui-monospace, monospace;
+  font-size: var(--text-meta);
+  color: var(--faint);
+}
+
+.texp__typed {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: bottom;
+  width: calc(var(--n) * 1ch);
+}
+
+/* Pinned mode: the window stays still. The outgoing output just clears, the
+   command retypes for the incoming role, and its output prints after it. */
+@media (min-width: 1024px) and (min-height: 700px) and (prefers-reduced-motion: no-preference) {
+  .texp .exp__card {
+    max-height: calc(100dvh - var(--header-h) - 12rem);
+    transform: none;
+    transition: opacity 120ms linear;
+  }
+
+  .texp .exp__card[data-state] {
+    transform: none;
+  }
+
+  .texp .exp__card:not(:first-child) {
+    border-top: 0;
+  }
+
+  .texp .exp__card[data-state="active"] .texp__typed {
+    animation: term-type 420ms steps(var(--n), end) both;
+  }
+
+  .texp .exp__card[data-state="active"] .texp__output {
+    animation: term-show 240ms ease-out 470ms both;
   }
 }
 
