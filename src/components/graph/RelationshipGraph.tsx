@@ -265,7 +265,7 @@ function GraphCanvas({ caption }: { caption: string }) {
             maxZoom={1.6}
             fitView
             fitViewOptions={{ padding: FIT_PADDING, maxZoom: 1 }}
-            proOptions={{ hideAttribution: true }}
+            attributionPosition="bottom-left"
           >
             <Panel position="top-left" className="rg-caption">
               {caption}

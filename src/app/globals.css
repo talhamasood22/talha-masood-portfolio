@@ -278,17 +278,6 @@ h4,
   box-shadow: 0 16px 40px -18px rgb(8 30 48 / 0.7);
 }
 
-/* Until the name docks into it, the bar would be an empty pill holding only
-   the theme and menu buttons. Drop its surface so just the buttons float
-   over the hero; the pill gathers around the name when it arrives. */
-.site-header[data-docked="false"] .nav-bar {
-  border-color: transparent;
-  background-color: transparent;
-  box-shadow: none;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-}
-
 /* A band in the page colour behind the floating bars, full width at the top
    of the screen. Without it, text scrolling under the bar shows above and
    beside the pill and reads as content colliding with it. It fades out at its
@@ -531,7 +520,10 @@ h4,
     opacity 320ms ease;
 }
 
-[data-docked="true"] .site-header__name > span {
+[data-docked="true"] .site-header__name > span,
+.site-header .site-header__name > span {
+  /* Small screens show the name in the bar from the first screen; only the
+     large-screen dock waits for the hero title to scroll away. */
   transform: none;
   opacity: 1;
 }
@@ -1016,6 +1008,26 @@ h4,
 
 .rg .react-flow__controls-button svg {
   fill: currentColor;
+}
+
+/* React Flow's credit link, kept visible as its licence asks for anyone
+   not on React Flow Pro, and quieted to match the canvas. */
+.rg .react-flow__attribution {
+  margin: 0.375rem 0.5rem;
+  padding: 0.125rem 0.375rem;
+  border-radius: var(--radius-chip);
+  background: transparent;
+  font-size: 0.6875rem;
+  line-height: 1.4;
+}
+
+.rg .react-flow__attribution a {
+  color: var(--faint);
+  text-decoration: none;
+}
+
+.rg .react-flow__attribution a:hover {
+  color: var(--muted);
 }
 
 .rg-caption {
