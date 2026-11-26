@@ -222,10 +222,15 @@ label,
 .nav-bar,
 .nav-panel,
 .site-drawer,
+.exp__facts,
 footer {
   font-family: var(--font-ui);
 }
 
+h1,
+h2,
+h3,
+h4,
 .font-display,
 .font-heading {
   font-family: var(--font-sans);

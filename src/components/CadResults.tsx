@@ -97,7 +97,7 @@ function bestModels(metric: Metric, row: Record<ModelId, Score>): ModelId[] {
 function BarChart({ metric }: { metric: Metric }) {
   const longerIsBetter = metric.better === "higher";
   return (
-    <div className="mt-5" aria-hidden="true">
+    <div className="font-ui mt-5" aria-hidden="true">
       {TASKS.map((task) => {
         const row = metric.data[task.id];
         const best = bestModels(metric, row);
@@ -283,7 +283,7 @@ export function CadResults() {
       </div>
 
       <details className="group/chart mt-4">
-        <summary className="focus-ring inline-flex min-h-[44px] cursor-pointer list-none items-center gap-1.5 rounded-chip text-small font-medium text-accent [&::-webkit-details-marker]:hidden">
+        <summary className="focus-ring font-ui inline-flex min-h-[44px] cursor-pointer list-none items-center gap-1.5 rounded-chip text-small font-medium text-accent [&::-webkit-details-marker]:hidden">
           <ChevronRight
             className="h-4 w-4 transition-transform group-open/chart:rotate-90"
             aria-hidden="true"
@@ -313,7 +313,7 @@ export function CadResults() {
 
         <div className="mt-5" aria-live="polite">
           <p className="max-w-[68ch] text-small text-muted">{metric.definition}</p>
-          <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1" aria-label="Legend">
+          <ul className="font-ui mt-3 flex flex-wrap gap-x-4 gap-y-1" aria-label="Legend">
             {MODELS.map((m) => (
               <li key={m.id} className="flex items-center gap-1.5 text-small text-muted">
                 <Marker model={m.id} />

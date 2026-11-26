@@ -24,7 +24,7 @@ export function RelationshipGraphSection() {
         />
 
         {company && (
-          <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-3 rounded-panel border border-hairline bg-panel px-5 py-4">
+          <div className="font-ui mt-8 flex flex-wrap items-center gap-x-4 gap-y-3 rounded-panel border border-hairline bg-panel px-5 py-4">
             {company.logo && <OrgLogo logo={company.logo} size={48} />}
             <div className="min-w-0">
               <p className="text-small text-faint">Built at</p>

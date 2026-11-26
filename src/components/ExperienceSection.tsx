@@ -218,7 +218,7 @@ export function ExperienceSection() {
                       {exp.link && (
                         <SmoothHashLink
                           href={exp.link.href}
-                          className="focus-ring mt-3 inline-flex min-h-[44px] items-center gap-1.5 rounded-chip text-small font-medium text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:decoration-accent"
+                          className="focus-ring font-ui mt-3 inline-flex min-h-[44px] items-center gap-1.5 rounded-chip text-small font-medium text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:decoration-accent"
                         >
                           {exp.link.label}
                           <ArrowDown className="h-3.5 w-3.5" aria-hidden="true" />
@@ -233,7 +233,7 @@ export function ExperienceSection() {
                               href={link.href}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="focus-ring inline-flex min-h-[44px] items-center gap-1 rounded-chip text-small font-medium text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:decoration-accent"
+                              className="focus-ring font-ui inline-flex min-h-[44px] items-center gap-1 rounded-chip text-small font-medium text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:decoration-accent"
                             >
                               {link.label}
                               <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />

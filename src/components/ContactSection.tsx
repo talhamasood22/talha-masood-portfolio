@@ -67,7 +67,7 @@ export function ContactSection() {
         <div className="mt-12 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12">
           {/* Direct channels */}
           <div className="lg:col-span-5">
-            <dl className="border-t border-hairline">
+            <dl className="font-ui border-t border-hairline">
               {channels.filter((channel) => channel.value).map((channel) => (
                 <div
                   key={channel.key}
