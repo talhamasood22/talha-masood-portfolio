@@ -131,7 +131,7 @@ export function ProjectsSection() {
                 )}
                 <div>
                   <dt className="meta">Stack</dt>
-                  <dd className="text-small text-muted">
+                  <dd className="font-mono text-[0.8125rem] text-muted">
                     {project.techStack.join(", ")}
                   </dd>
                 </div>
@@ -160,7 +160,7 @@ export function ProjectsSection() {
                 <p className="mt-3 max-w-[62ch] text-small text-muted text-pretty">
                   {project.summary}
                 </p>
-                <p className="meta mt-4">
+                <p className="meta mt-4 font-mono">
                   <span className="sr-only">Stack: </span>
                   {project.techStack.join(", ")}
                 </p>

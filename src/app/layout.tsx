@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo } from "next/font/google";
+import { Archivo, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Footer } from "@/components/Footer";
@@ -16,6 +16,16 @@ const archivo = Archivo({
   axes: ["wdth"],
   display: "swap",
   fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
+});
+
+/* A monospace accent for numbers and tech names only (badges, stats, chart
+   values), so figures line up and stack names read as code. Everything else
+   stays Archivo. */
+const mono = JetBrains_Mono({
+  variable: "--font-jetbrains",
+  subsets: ["latin"],
+  display: "swap",
+  fallback: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
 });
 
 /**
@@ -84,7 +94,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={archivo.variable}
+      className={`${archivo.variable} ${mono.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />

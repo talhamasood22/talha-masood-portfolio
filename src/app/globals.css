@@ -79,6 +79,7 @@
   --color-field-border: var(--field-border);
 
   --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
 
 /* ---- Type scale ---------------------------------------------------------
@@ -870,6 +871,7 @@ button,
 }
 
 .rg-stats dd {
+  font-family: var(--font-mono);
   font-weight: 600;
   color: var(--ink);
   font-variant-numeric: tabular-nums;
