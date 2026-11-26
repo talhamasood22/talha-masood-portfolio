@@ -819,6 +819,13 @@ button,
    A mock-data rebuild of the lineage graph. Data objects are small pills,
    tasks are cards; grouped task cards carry the run cycler and status bar. */
 
+/* The graph stays in Archivo at the original body size whatever the page
+   font is. */
+.rg {
+  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.0625rem;
+}
+
 .rg-toolbar {
   display: flex;
   flex-wrap: wrap;

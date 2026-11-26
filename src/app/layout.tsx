@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { EB_Garamond, JetBrains_Mono } from "next/font/google";
+import { Archivo, EB_Garamond, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Footer } from "@/components/Footer";
@@ -15,6 +15,16 @@ const serif = EB_Garamond({
   subsets: ["latin", "latin-ext"],
   display: "swap",
   fallback: ["Garamond", "Georgia", "serif"],
+});
+
+/* The relationship graph keeps Archivo, so the mockup only changes the
+   page text around it. */
+const archivo = Archivo({
+  variable: "--font-archivo",
+  subsets: ["latin", "latin-ext"],
+  axes: ["wdth"],
+  display: "swap",
+  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
 });
 
 /* A monospace accent for numbers and tech names only (badges, stats, chart
@@ -93,7 +103,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${serif.variable} ${mono.variable}`}
+      className={`${serif.variable} ${archivo.variable} ${mono.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
