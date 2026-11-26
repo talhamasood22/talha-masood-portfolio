@@ -889,3 +889,10 @@ body:has(.skin-terminal) [aria-label="Sections menu"] li:last-child a::before {
     padding-left: 0.25rem;
   }
 }
+
+/* The graph heading is the one long section title ("Task-run graph: 1,388
+   nodes → 52"). In monospace at full section size it broke into three
+   lines in its narrow column; a step smaller keeps it to two. */
+.skin-terminal #graph-heading {
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 1.875rem);
+}
