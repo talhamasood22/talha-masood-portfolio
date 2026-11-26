@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, JetBrains_Mono } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Footer } from "@/components/Footer";
@@ -8,14 +9,19 @@ import { THEME_CHROME } from "@/lib/theme";
 import { personalInfo } from "@/data/portfolio";
 import { Analytics } from "@vercel/analytics/next";
 
-/* One family. Archivo is variable on width as well as weight, so the name and
-   headings can be set wide while reading text stays at normal width. */
-const archivo = Archivo({
-  variable: "--font-archivo",
-  subsets: ["latin", "latin-ext"],
-  axes: ["wdth"],
+/* Mockup: TeX Gyre Pagella X (Michael Sharpe's extension of TeX Gyre
+   Pagella, from the newpx package on CTAN; GUST Font License), a Palatino
+   design, self-hosted. It ships in regular and bold only. */
+const serif = localFont({
+  variable: "--font-serif",
+  src: [
+    { path: "./fonts/TeXGyrePagellaX-Regular.otf", weight: "400", style: "normal" },
+    { path: "./fonts/TeXGyrePagellaX-Italic.otf", weight: "400", style: "italic" },
+    { path: "./fonts/TeXGyrePagellaX-Bold.otf", weight: "700", style: "normal" },
+    { path: "./fonts/TeXGyrePagellaX-BoldItalic.otf", weight: "700", style: "italic" },
+  ],
   display: "swap",
-  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
+  fallback: ["Palatino", "Palatino Linotype", "Book Antiqua", "Georgia", "serif"],
 });
 
 /* A monospace accent for numbers and tech names only (badges, stats, chart
@@ -94,7 +100,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${archivo.variable} ${mono.variable}`}
+      className={`${serif.variable} ${mono.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
